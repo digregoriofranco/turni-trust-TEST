@@ -2,346 +2,344 @@ import streamlit as st
 import pandas as pd
 import calendar
 import random
+import json
 import copy
 from datetime import date
 import holidays
 
-st.set_page_config(page_title="Turni Trust Pro", layout="wide")
-st.title("🧩 Turni Trust - All In One Version")
+st.set_page_config(page_title="Turni Trust Pro - TEST", layout="wide")
 
 # ==============================================================================
-# 1. CONFIGURAZIONE DATI
+# 1. GESTIONE STATO E CONFIGURAZIONE DI DEFAULT
 # ==============================================================================
-# Inserisci qui i dati. Quando salvi questo file, l'app si aggiorna in tempo reale.
 
-CONFIG = {
-    "OPERATORS": [
-        "Gurpal S.", "Nicola T.", "Paolo G.", "Lorenzo T.", "Andrea V.",
-        "Federico P.", "Erica B.", "Daniela C.", "Francesca F.", "Lorenza V.",
-        "Daniela G.", "Katia B.", "Caterina B.", "Maria S."
-    ],
-    
-    # COMPETENZE CON LA NOMENCLATURA RICHIESTA (Prefisso SERVIZIO:)
-    "OPERATOR_SKILLS": {
-        "Gurpal S.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN"],
-        "Nicola T.": ["SPID: PECMAN/SDO", "SPID: cc.spid", "PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
-        "Paolo G.": ["PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
-        "Lorenzo T.": ["PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
-        "Andrea V.": ["FIRMA: cc.firma", "FIRMA: PECMAN/SDO"],
-        "Federico P.": ["FIRMA: cc.firma", "FIRMA: PECMAN/SDO", "PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
-        "Erica B.": ["PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
-        "Daniela C.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
-        "Francesca F.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
-        "Lorenza V.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "SPID: PECMAN/SDO", "SPID: cc.spid"],
-        "Daniela G.": ["SPID: PECMAN/SDO", "SPID: cc.spid", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
-        "Katia B.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
-        "Caterina B.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN"],
-        "Maria S.": []
+# Configurazione di base (Fallback se non carichi nulla)
+DEFAULT_CONFIG = {
+    "OPERATORS": ["Operatore 1", "Operatore 2"],
+    "SERVICES": {
+        "FATTURAZIONE": {"color": "#4FFF81", "tasks": ["cc.fatturazione", "SDO", "PECMAN"]},
+        "FIRMA": {"color": "#ffb74f", "tasks": ["cc.firma", "PECMAN/SDO (Firma)"]},
+        "SPID": {"color": "#549ff5", "tasks": ["cc.spid", "PECMAN/SDO (SPID)"]},
+        "PEC": {"color": "#FF5353", "tasks": ["reparto.pec", "Caselle attesa attivazione", "Escalation"]}
     },
-
-    # ORARI TELEFONO
-    "TURNI_TELEFONO_FISSI": {
-        "Gurpal S.": "11:00 - 12:00",
-        "Nicola T.": "11:00 - 12:00",
-        "Paolo G.": "12:00 - 13:00",
-        "Lorenzo T.": "09:00 - 10:00",
-        "Andrea V.": "10:00 - 11:00",
-        "Federico P.": "11:00 - 12:00",
-        "Erica B.": "10:00 - 11:00",
-        "Daniela C.": "15:00 - 16:00",
-        "Francesca F.": "10:00 - 11:00",
-        "Katia B.": "10:00 - 11:00"
+    "SKILLS": {
+        "Operatore 1": ["cc.fatturazione"],
+        "Operatore 2": ["reparto.pec"]
     },
-
-    # PAUSE PRANZO
-    "PAUSE_PRANZO": {
-        "FISSI": {
-            "Nicola T.": "13:00 - 14:30", "Paolo G.": "13:30 - 15:00", "Lorenzo T.": "13:00 - 14:30",
-            "Andrea V.": "13:00 - 14:30", "Federico P.": "13:00 - 14:30", "Erica B.": "13:00 - 14:30",
-            "Daniela C.": "13:30 - 15:00", "Francesca F.": "13:00 - 14:30", "Lorenza V.": "13:00 - 14:30",
-            "Daniela G.": "13:00 - 14:30", "Caterina B.": "13:00 - 14:30", "Maria S.": "13:00 - 14:30"
-        },
-        "SLOT_ROTAZIONE": ["12:30 - 14:00", "13:30 - 15:00"]
+    "PAUSE": {
+        "FISSI": {},
+        "SLOTS": ["12:30 - 13:00", "13:00 - 13:30", "13:30 - 14:00"]
     },
-
-    # GIORNATA TIPO (Deve combaciare esattamente con le skill sopra)
-    "GIORNATA_TIPO": [
-        {"nome": "FATTURAZIONE: cc.fatturazione", "skill_richiesta": "FATTURAZIONE: cc.fatturazione", "qty": 1, "colore": "#4FFF81"},
-        {"nome": "FATTURAZIONE: SDO", "skill_richiesta": "FATTURAZIONE: SDO", "qty": 1, "colore": "#4FFF81"},
-        {"nome": "FATTURAZIONE: PECMAN", "skill_richiesta": "FATTURAZIONE: PECMAN", "qty": 1, "colore": "#4FFF81"},
-        {"nome": "FIRMA: PECMAN/SDO", "skill_richiesta": "FIRMA: PECMAN/SDO", "qty": 1, "colore": "#ffb74f"},
-        {"nome": "FIRMA: cc.firma", "skill_richiesta": "FIRMA: cc.firma", "qty": 1, "colore": "#ffb74f"},
-        {"nome": "SPID: cc.spid", "skill_richiesta": "SPID: cc.spid", "qty": 1, "colore": "#549ff5"},
-        {"nome": "SPID: PECMAN/SDO", "skill_richiesta": "SPID: PECMAN/SDO", "qty": 1, "colore": "#549ff5"},
-        {"nome": "PEC: reparto.tecnico", "skill_richiesta": "PEC: reparto.pec", "qty": 1, "colore": "#FF5353"},
-        {"nome": "PEC: Escalation SDO/PECMAN", "skill_richiesta": "PEC: PECMAN/SDO escalation", "qty": 1, "colore": "#FF5353"},
-        {"nome": "PEC: Caselle Occupate", "skill_richiesta": "PEC: Caselle Occupate", "qty": 1, "colore": "#FF9696"},
-        {"nome": "PEC: PECMAN Mattina", "skill_richiesta": "PEC: PECMAN/SDO MATTINA", "qty": 1, "colore": "#FF9696"},
-        {"nome": "PEC: PECMAN Pomeriggio", "skill_richiesta": "PEC: PECMAN/SDO POMERIGGIO", "qty": 1, "colore": "#FF9696"}
-    ],
-    
-    # SCHEMA SERVIZI (Per visualizzazione Matrice - Aggiornato con i nomi completi)
-    "SERVICES_SCHEMA": {
-        "FATTURAZIONE": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN"],
-        "FIRMA": ["FIRMA: cc.firma", "FIRMA: PECMAN/SDO"],
-        "SPID": ["SPID: cc.spid", "SPID: PECMAN/SDO"],
-        "PEC": ["PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"]
-    }
+    "TELEFONI": {}
 }
 
+# Inizializzazione Session State
+if 'config' not in st.session_state:
+    st.session_state.config = copy.deepcopy(DEFAULT_CONFIG)
+
+def update_config(key, value):
+    st.session_state.config[key] = value
+
 # ==============================================================================
-# 2. LOGICA APPLICATIVA
+# 2. INTERFACCIA UTENTE
 # ==============================================================================
 
-if 'presenze_db' not in st.session_state:
-    st.session_state.presenze_db = {}
+st.title("🧩 Turni Trust - Pannello di Controllo")
 
-# --- INTERFACCIA ---
-main_tab1, main_tab2, main_tab3 = st.tabs(["🗓️ GENERAZIONE TURNI", "🛠️ VISUALIZZA MATRICE", "ℹ️ ISTRUZIONI"])
-
-with main_tab3:
-    st.header("Configurazione Attuale")
-    st.info("Per modificare permanentemente questi dati, edita il file app.py su GitHub.")
-    st.json(CONFIG)
-
-with main_tab2:
-    st.header("Matrice Competenze (Sola Lettura)")
-    st.caption("Verifica qui chi sa fare cosa. Per modifiche, edita CONFIG in app.py")
+# Sidebar per Caricamento/Salvataggio Configurazione
+with st.sidebar:
+    st.header("💾 Memoria Dati")
+    st.info("Configura l'app dalla tab 'Impostazioni', poi scarica il file per non perdere le modifiche.")
     
-    # Costruzione tabella usando i nomi ESATTI senza manipolazioni
-    all_skill_cols = []
-    # Prima raccogliamo le skill definite nello schema
-    for service, tasks in CONFIG["SERVICES_SCHEMA"].items():
-        for t in tasks:
-            if t not in all_skill_cols: all_skill_cols.append(t)
-            
-    # Poi aggiungiamo eventuali skill orfane dalla Giornata Tipo
-    for t in CONFIG["GIORNATA_TIPO"]:
-        skill = t["skill_richiesta"]
-        if skill not in all_skill_cols:
-            all_skill_cols.append(skill)
+    # Upload
+    uploaded_file = st.file_uploader("📂 Carica Configurazione (JSON)", type="json")
+    if uploaded_file is not None:
+        try:
+            loaded_json = json.load(uploaded_file)
+            st.session_state.config = loaded_json
+            st.success("Configurazione caricata!")
+        except Exception as e:
+            st.error(f"Errore caricamento: {e}")
 
-    rows = []
-    for op in CONFIG["OPERATORS"]:
-        r = {"Operatore": op}
-        my_s = CONFIG["OPERATOR_SKILLS"].get(op, [])
-        for col in all_skill_cols:
-            # Controllo ESATTO della stringa
-            r[col] = "✅" if col in my_s else ""
-        rows.append(r)
+    # Download
+    config_json = json.dumps(st.session_state.config, indent=4)
+    st.download_button(
+        label="📥 Scarica Configurazione Attuale",
+        data=config_json,
+        file_name="configurazione_turni.json",
+        mime="application/json"
+    )
+    st.divider()
+
+# TAB PRINCIPALI
+tab_gen, tab_settings = st.tabs(["🗓️ GENERAZIONE TURNI", "⚙️ IMPOSTAZIONI AVANZATE"])
+
+# ------------------------------------------------------------------------------
+# TAB IMPOSTAZIONI (IL CUORE DELLE MODIFICHE)
+# ------------------------------------------------------------------------------
+with tab_settings:
+    st.header("Pannello di Configurazione")
+    
+    # 1. GESTIONE SERVIZI E COLORI
+    with st.expander("🎨 1. Servizi, Colori e Sottolavorazioni", expanded=True):
+        col_s1, col_s2 = st.columns([1, 2])
         
-    df_m = pd.DataFrame(rows).set_index("Operatore")
-    st.dataframe(df_m, use_container_width=True, height=600)
+        with col_s1:
+            st.subheader("Aggiungi Servizio")
+            new_service = st.text_input("Nome Servizio (es. PEC)")
+            new_color = st.color_picker("Colore Servizio", "#00f900")
+            if st.button("➕ Crea Servizio"):
+                if new_service and new_service not in st.session_state.config["SERVICES"]:
+                    st.session_state.config["SERVICES"][new_service] = {"color": new_color, "tasks": []}
+                    st.rerun()
+        
+        with col_s2:
+            st.subheader("Gestione Sottolavorazioni")
+            services = st.session_state.config["SERVICES"]
+            
+            for s_name, s_data in services.items():
+                c1, c2, c3 = st.columns([0.5, 2, 1])
+                c1.color_picker("", s_data["color"], key=f"col_{s_name}", disabled=True)
+                c2.markdown(f"**{s_name}**")
+                
+                # Gestione Task
+                current_tasks = s_data.get("tasks", [])
+                tasks_text = st.text_area(f"Task per {s_name} (uno per riga)", value="\n".join(current_tasks), key=f"txt_{s_name}", height=68)
+                
+                # Aggiorna Task
+                if st.button(f"💾 Salva Task {s_name}", key=f"btn_{s_name}"):
+                    new_task_list = [t.strip() for t in tasks_text.split("\n") if t.strip()]
+                    st.session_state.config["SERVICES"][s_name]["tasks"] = new_task_list
+                    st.session_state.config["SERVICES"][s_name]["color"] = s_data["color"] # (Placeholder per editing colore futuro)
+                    st.toast(f"Task {s_name} aggiornati")
+                    st.rerun()
+                
+                if st.button(f"🗑️ Elimina Servizio {s_name}", key=f"del_{s_name}"):
+                    del st.session_state.config["SERVICES"][s_name]
+                    st.rerun()
+                st.divider()
 
-with main_tab1:
-    mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
+    # 2. GESTIONE OPERATORI
+    with st.expander("👥 2. Gestione Operatori", expanded=False):
+        current_ops = st.session_state.config["OPERATORS"]
+        text_ops = st.text_area("Lista Operatori (uno per riga)", value="\n".join(current_ops), height=150)
+        if st.button("💾 Aggiorna Lista Operatori"):
+            new_ops_list = [x.strip() for x in text_ops.split("\n") if x.strip()]
+            st.session_state.config["OPERATORS"] = new_ops_list
+            # Pulisci skill orfane
+            clean_skills = {op: st.session_state.config["SKILLS"].get(op, []) for op in new_ops_list}
+            st.session_state.config["SKILLS"] = clean_skills
+            st.toast("Lista operatori salvata!")
+            st.rerun()
+
+    # 3. MATRICE SKILL
+    with st.expander("🛠️ 3. Matrice Competenze (Chi sa fare cosa)", expanded=False):
+        st.info("Spunta le caselle per assegnare le skill.")
+        
+        # Costruzione colonne dinamica
+        all_tasks_cols = []
+        task_to_service_map = {} # Per ritrovare il padre
+        
+        for s_name, s_data in st.session_state.config["SERVICES"].items():
+            for t in s_data["tasks"]:
+                full_name = f"{s_name} > {t}"
+                all_tasks_cols.append(full_name)
+                task_to_service_map[full_name] = t # Mappa nome visualizzato -> nome reale
+        
+        # Costruzione DataFrame per editor
+        rows = []
+        for op in st.session_state.config["OPERATORS"]:
+            op_skills = st.session_state.config["SKILLS"].get(op, [])
+            row = {"Operatore": op}
+            for col in all_tasks_cols:
+                real_task_name = task_to_service_map[col]
+                row[col] = real_task_name in op_skills
+            rows.append(row)
+            
+        df_skills = pd.DataFrame(rows)
+        if not df_skills.empty:
+            df_skills.set_index("Operatore", inplace=True)
+            edited_df = st.data_editor(df_skills, use_container_width=True, height=500)
+            
+            if st.button("💾 Salva Matrice Competenze"):
+                new_skill_dict = {}
+                for op, row in edited_df.iterrows():
+                    skills = []
+                    for col in all_tasks_cols:
+                        if row[col]:
+                            skills.append(task_to_service_map[col])
+                    new_skill_dict[op] = skills
+                st.session_state.config["SKILLS"] = new_skill_dict
+                st.success("Matrice salvata in memoria! Ricordati di scaricare il JSON.")
+
+    # 4. GESTIONE PAUSE E TELEFONI
+    with st.expander("☕ 4. Gestione Pause e Telefoni", expanded=False):
+        c_p1, c_p2 = st.columns(2)
+        with c_p1:
+            st.subheader("Slot Rotazione Pause")
+            current_slots = st.session_state.config["PAUSE"].get("SLOTS", [])
+            slots_txt = st.text_area("Orari slot (uno per riga)", value="\n".join(current_slots))
+            if st.button("💾 Salva Slot"):
+                st.session_state.config["PAUSE"]["SLOTS"] = [x.strip() for x in slots_txt.split("\n") if x.strip()]
+                st.toast("Slot salvati")
+        
+        with c_p2:
+            st.subheader("Pause Fisse (Eccezioni)")
+            fixed_df = pd.DataFrame([
+                {"Operatore": op, "Orario": st.session_state.config["PAUSE"]["FISSI"].get(op, "")}
+                for op in st.session_state.config["OPERATORS"]
+            ])
+            edited_fixed = st.data_editor(fixed_df, key="fixed_pause_editor", hide_index=True)
+            if st.button("💾 Salva Pause Fisse"):
+                new_fixed = {row["Operatore"]: row["Orario"] for _, row in edited_fixed.iterrows() if row["Orario"]}
+                st.session_state.config["PAUSE"]["FISSI"] = new_fixed
+                st.toast("Pause fisse salvate")
+
+# ------------------------------------------------------------------------------
+# TAB GENERAZIONE TURNI (LOGICA OPERATIVA)
+# ------------------------------------------------------------------------------
+with tab_gen:
+    st.header("Generazione Turni")
     
-    st.sidebar.header("Impostazioni")
-    mese_s = st.sidebar.selectbox("Mese", mesi)
-    anno_s = st.sidebar.number_input("Anno", 2024, 2030, 2026)
-    st.sidebar.divider()
-    modo = st.sidebar.radio("Modalità Rotazione", ["Giornaliera", "Settimanale"], index=0)
-    st.sidebar.markdown("---")
-    max_tasks = st.sidebar.slider("Max Lavorazioni/giorno", 1, 6, 3)
-    
-    mese_n = mesi.index(mese_s) + 1
+    # Sidebar impostazioni locali
+    col_set1, col_set2, col_set3 = st.columns(3)
+    with col_set1:
+        mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
+        mese_s = st.selectbox("Mese", mesi)
+        mese_n = mesi.index(mese_s) + 1
+    with col_set2:
+        anno_s = st.number_input("Anno", 2024, 2030, 2026)
+    with col_set3:
+        max_tasks = st.slider("Max Task/Giorno", 1, 5, 3)
+
+    # Preparazione Calendario
     _, nd = calendar.monthrange(anno_s, mese_n)
     days = [date(anno_s, mese_n, x) for x in range(1, nd+1)]
     hols = holidays.IT(years=anno_s)
     cols = [f"{d.day:02d} {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'][d.weekday()]}" for d in days]
-    mask = [(d.weekday()>=5 or d in hols) for d in days]
-    ops = CONFIG["OPERATORS"]
+    ops = st.session_state.config["OPERATORS"]
     
-    st.subheader(f"Piano Turni: {mese_s} {anno_s}")
-    st.warning("⚠️ Nota: Le assenze inserite qui si resettano se ricarichi la pagina.")
-    
+    # Tabella Presenze Temporanea
+    st.markdown("### 1. Inserisci Assenze (Ferie/Permessi)")
     df_base = pd.DataFrame(False, index=ops, columns=cols)
+    
+    # Pre-fill weekend
+    mask = [(d.weekday()>=5 or d in hols) for d in days]
     for i, c in enumerate(cols): 
         if mask[i]: df_base[c] = True 
     
-    t1, t2, t3 = st.tabs(["FERIE", "P.MATTINA", "P.POMERIGGIO"])
-    with t1: in_f = st.data_editor(df_base.copy(), key="f", height=200)
-    with t2: in_pm = st.data_editor(pd.DataFrame(False, index=ops, columns=cols), key="pm", height=200)
-    with t3: in_pp = st.data_editor(pd.DataFrame(False, index=ops, columns=cols), key="pp", height=200)
-
-    st.divider()
-
-    if st.button("🚀 GENERA TURNI", type="primary"):
+    edited_absence = st.data_editor(df_base, key="absences_editor")
+    
+    if st.button("🚀 GENERA PIANO TURNI", type="primary"):
+        # Logica di generazione
         out_sched = {}
         missing = {}
         history_cnt = {op: {} for op in ops}
         
-        # PREPARAZIONE TASK E ORDINAMENTO PER SCARSITÀ
-        tasks_base = []
-        for t in CONFIG["GIORNATA_TIPO"]:
-            for _ in range(int(t.get("qty", 1))): tasks_base.append(copy.deepcopy(t))
-            
+        # Costruzione lista task piatta
+        all_tasks_flat = []
+        task_color_map = {}
+        task_skill_map = {} # Nome Task -> Skill richiesta (in questo caso coincidono, ma per struttura futura)
+        
+        for s_name, s_data in st.session_state.config["SERVICES"].items():
+            for t in s_data["tasks"]:
+                all_tasks_flat.append(t)
+                task_color_map[t] = s_data["color"]
+                task_skill_map[t] = t # La skill richiesta è il nome stesso del task
+        
+        # Funzione Scarsità
         def count_capable(task_name):
-            # Trova la skill richiesta per questo task
-            task_info = next((t for t in CONFIG["GIORNATA_TIPO"] if t["nome"] == task_name), None)
-            if not task_info: return 999
-            needed_skill = task_info["skill_richiesta"]
-            # Conta quanti operatori hanno ESATTAMENTE quella stringa skill
-            return sum(1 for op in ops if needed_skill in CONFIG["OPERATOR_SKILLS"].get(op, []))
+            return sum(1 for op in ops if task_name in st.session_state.config["SKILLS"].get(op, []))
         
-        # Ordina: prima i task che sanno fare in pochi
-        tasks_base.sort(key=lambda t: count_capable(t["nome"]))
+        # Ordina task per difficoltà (chi li sa fare in pochi viene assegnato prima)
+        all_tasks_flat.sort(key=lambda t: count_capable(t))
         
-        weekly_sticky = {}
-
+        # Ciclo Giorni
         for i, day_col in enumerate(cols):
             curr_date = days[i]
             
-            # GESTIONE FESTIVI E WEEKEND
+            # Skip Festivi/Weekend se non lavorativi
             if curr_date in hols:
                 out_sched[day_col] = {op: f"🎉 {hols.get(curr_date)}" for op in ops}
                 continue
-            if curr_date.weekday() >= 5 and not any(in_f[day_col]):
-                out_sched[day_col] = {op: "" for op in ops}
-                continue
-
-            if curr_date.weekday() == 0: weekly_sticky = {} 
+            if curr_date.weekday() >= 5 and not any(edited_absence[day_col]): # Se weekend e nessuno ha tolto la spunta (che qui significa ferie forzata)
+                 # Nota: logica inversa weekend. Se è spuntato = NON lavora.
+                 out_sched[day_col] = {op: "" for op in ops}
+                 continue
 
             day_assign = {op: "" for op in ops}
             available_ops = []
             
-            # CHECK DISPONIBILITÀ
             for op in ops:
-                if in_f.at[op, day_col]: day_assign[op] = "FERIE"
-                elif in_pm.at[op, day_col]: day_assign[op] = "P.MATT"; available_ops.append(op)
-                elif in_pp.at[op, day_col]: day_assign[op] = "P.POM"; available_ops.append(op)
-                else: available_ops.append(op)
+                if edited_absence.at[op, day_col]: 
+                    day_assign[op] = "FERIE"
+                else:
+                    available_ops.append(op)
             
-            todays_tasks = copy.deepcopy(tasks_base)
+            todays_tasks = copy.deepcopy(all_tasks_flat)
             
-            # FUNZIONE ASSEGNAZIONE
+            # Assegnazione
             def get_load(op):
-                if day_assign[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
+                if day_assign[op] == "FERIE": return 99
                 if not day_assign[op]: return 0
                 return day_assign[op].count('+') + 1
 
-            def try_assign(task_list, mode_sticky=False):
-                remaining = []
-                for t in task_list:
-                    assigned = False
-                    candidates = []
-                    for op in available_ops:
-                        op_skills = CONFIG["OPERATOR_SKILLS"].get(op, [])
-                        # Match ESATTO della stringa
-                        if t["skill_richiesta"] in op_skills:
-                            candidates.append(op)
-                    
-                    if not candidates:
-                        remaining.append(t); continue
+            for t in todays_tasks:
+                candidates = [op for op in available_ops if t in st.session_state.config["SKILLS"].get(op, [])]
+                
+                if not candidates:
+                    if day_col not in missing: missing[day_col] = []
+                    missing[day_col].append(t)
+                    continue
 
-                    random.shuffle(candidates)
-                    # EQUITÀ: Prima chi è più scarico oggi, poi chi l'ha fatto meno nel mese
-                    candidates.sort(key=lambda x: (get_load(x), history_cnt[x].get(t["nome"], 0)))
-
-                    chosen_one = None
-                    for op in candidates:
-                        if mode_sticky and t["nome"] not in weekly_sticky.get(op, []): continue
-                        if get_load(op) < max_tasks:
-                            if day_assign[op] and "P." not in day_assign[op] and "+" not in day_assign[op] and max_tasks == 1: continue
-                            if day_assign[op] in ["FERIE"]: continue 
-                            chosen_one = op; break
-                    
-                    # Force assign se necessario
-                    if not chosen_one and not mode_sticky:
-                        for op in candidates:
-                            if day_assign[op] in ["FERIE", "P.MATT", "P.POM"]: continue 
-                            chosen_one = op; break 
-
-                    if chosen_one:
-                        op = chosen_one
-                        prefix = f"({day_assign[op]}) " if "P." in day_assign[op] else ""
-                        if day_assign[op] and "P." not in day_assign[op]: day_assign[op] += f" + {t['nome']}"
-                        else: day_assign[op] = prefix + t["nome"]
-                        history_cnt[op][t["nome"]] = history_cnt[op].get(t["nome"], 0) + 1
-                        assigned = True
-                        if modo == "Settimanale":
-                            if op not in weekly_sticky: weekly_sticky[op] = []
-                            weekly_sticky[op].append(t["nome"])
-                    
-                    if not assigned: remaining.append(t)
-                return remaining
-
-            if modo == "Settimanale":
-                todays_tasks = try_assign(todays_tasks, mode_sticky=True)
+                random.shuffle(candidates)
+                # Sort: 1. Carico oggi, 2. Storico
+                candidates.sort(key=lambda x: (get_load(x), history_cnt[x].get(t, 0)))
+                
+                chosen = None
+                for op in candidates:
+                    if get_load(op) < max_tasks:
+                        chosen = op
+                        break
+                
+                if chosen:
+                    if day_assign[chosen]: day_assign[chosen] += f" + {t}"
+                    else: day_assign[chosen] = t
+                    history_cnt[chosen][t] = history_cnt[chosen].get(t, 0) + 1
             
-            final_rem = try_assign(todays_tasks, mode_sticky=False)
-            if final_rem: missing[day_col] = [t["nome"] for t in final_rem]
-
-            # PRANZI
-            rotation_slots = CONFIG["PAUSE_PRANZO"]["SLOT_ROTAZIONE"]
-            fixed_lunches = CONFIG["PAUSE_PRANZO"]["FISSI"]
-            daily_lunch_slots = copy.deepcopy(rotation_slots)
-            random.shuffle(daily_lunch_slots)
-            lunch_idx = 0
+            # Assegnazione Pause
+            slots = copy.deepcopy(st.session_state.config["PAUSE"]["SLOTS"])
+            random.shuffle(slots)
+            slot_idx = 0
+            fixed_pause = st.session_state.config["PAUSE"]["FISSI"]
             
-            for op in ops:
-                is_working = day_assign[op] not in ["FERIE"] and "🎉" not in day_assign[op]
-                if is_working and day_assign[op] and day_assign[op] not in ["P.MATT", "P.POM"]:
-                    lunch_time = ""
-                    if op in fixed_lunches: lunch_time = fixed_lunches[op]
-                    elif daily_lunch_slots:
-                        lunch_time = daily_lunch_slots[lunch_idx % len(daily_lunch_slots)]
-                        lunch_idx += 1
-                    if lunch_time: day_assign[op] += f"\n🥘 {lunch_time}"
-
+            for op in available_ops:
+                if day_assign[op] and day_assign[op] != "FERIE":
+                    p_time = fixed_pause.get(op)
+                    if not p_time and slots:
+                        p_time = slots[slot_idx % len(slots)]
+                        slot_idx += 1
+                    if p_time: day_assign[op] += f"\n☕ {p_time}"
+            
             out_sched[day_col] = day_assign
 
-        # OUTPUT
+        # Visualizzazione
         res_df = pd.DataFrame(out_sched)
-        new_index = []
-        for op in res_df.index:
-            ph = CONFIG["TURNI_TELEFONO_FISSI"].get(op)
-            if ph: new_index.append(f"{op}\n☎️ {ph}")
-            else: new_index.append(op)
-        res_df.index = new_index
-
-        task_colors = {t["nome"]: t.get("colore", "#fff") for t in CONFIG["GIORNATA_TIPO"]}
-        def colora(val):
-            s = str(val); bg = ""
-            if "🎉" in s: bg = "#f4cccc"
-            elif "FERIE" in s: bg = "#e06666"
-            elif "P." in s: bg = "#ffd966"
-            else:
-                for k, c in task_colors.items():
-                    if k in s: bg = c; break
-            return f'background-color: {bg}' if bg else ''
-
-        st.success("Turni Generati con successo!")
-
-        weeks = []
-        curr_week = []
-        for col in res_df.columns:
-            if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
-            curr_week.append(col)
-        if curr_week: weeks.append(curr_week)
-
-        for i, w_cols in enumerate(weeks):
-            working_cols = []
-            for c in w_cols:
-                is_weekend = "Sab" in c or "Dom" in c
-                if not is_weekend: working_cols.append(c)
-
-            if working_cols:
-                st.markdown(f"### 📅 Settimana {i+1}")
-                st.dataframe(res_df[working_cols].style.applymap(colora), use_container_width=True)
-                
-                week_errors = []
-                for day in working_cols:
-                    if day in missing and missing[day]:
-                        tasks_str = ", ".join(missing[day])
-                        week_errors.append(f"**{day}**: {tasks_str}")
-                if week_errors:
-                    st.error("⚠️ Task scoperti (Mancanza skill o operatori):")
-                    for err in week_errors: st.markdown(f"- {err}")
-                
-                with st.expander(f"📋 Copia Dati Settimana {i+1}"):
-                    st.code(res_df[working_cols].to_csv(sep='\t'), language='text')
-                st.markdown("---")
         
-        st.subheader("📋 Export Mese Completo")
-        st.download_button("Scarica CSV", res_df.to_csv(sep=';').encode('utf-8'), f'Turni_{mese_s}.csv', 'text/csv')
+        # Funzione Colori
+        def style_map(val):
+            s = str(val)
+            if "FERIE" in s: return "background-color: #e06666"
+            if "🎉" in s: return "background-color: #f4cccc"
+            for t, color in task_color_map.items():
+                if t in s: return f"background-color: {color}"
+            return ""
+
+        st.success("Generazione Completata!")
+        st.dataframe(res_df.style.applymap(style_map), use_container_width=True, height=600)
+        
+        if missing:
+            st.error("Alcuni task non sono stati assegnati per mancanza di operatori disponibili:")
+            st.json(missing)
+            
+        st.download_button("Scarica CSV Turni", res_df.to_csv(sep=";").encode("utf-8"), "turni.csv")
