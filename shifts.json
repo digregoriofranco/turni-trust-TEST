@@ -17,7 +17,7 @@
             "Maria S.": "\ud83c\udf89 Capodanno"
         },
         "02 Ven": {
-            "Gurpal S.": "FATTURAZIONE: cc.fatturazione\n\u2615 12:30 - 14:00",
+            "Gurpal S.": "FATTURAZIONE: cc.fatturazione\n\u2615 12:30 - 14:00 + FATTURAZIONE: SDO + FATTURAZIONE: PECMAN",
             "Nicola T.": "FERIE",
             "Paolo G.": "PEC: reparto.pec + PEC: Caselle attesa attivazione + PEC: PECMAN/SDO escalation\n\u2615 13:30 - 15:00",
             "Lorenzo T.": "FERIE",
@@ -29,7 +29,7 @@
             "Lorenza V.": "SPID: cc.spid + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "FERIE",
             "Katia B.": "FERIE",
-            "Caterina B.": "FATTURAZIONE: SDO + FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
+            "Caterina B.": "FERIE",
             "Maria S.": "FERIE"
         },
         "03 Sab": {
