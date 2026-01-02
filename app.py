@@ -12,7 +12,7 @@ st.set_page_config(page_title="Turni Trust Pro - Cloud", layout="wide")
 st.title("☁️ Turni Trust - Cloud Connected")
 
 # ==============================================================================
-# 1. GESTIONE CONNESSIONE GITHUB (GENERICA)
+# 1. GESTIONE CONNESSIONE GITHUB
 # ==============================================================================
 
 def get_file_from_github(filename):
@@ -28,7 +28,7 @@ def get_file_from_github(filename):
             contents = repo.get_contents(filename)
             return json.loads(contents.decoded_content.decode()), contents.sha
         except:
-            return {}, None # Se il file non esiste o è vuoto
+            return {}, None
     except Exception as e:
         st.error(f"Errore lettura {filename}: {e}")
         return None, None
@@ -41,13 +41,11 @@ def save_file_to_github(filename, content, sha):
         g = Github(token)
         repo = g.get_repo(repo_name)
         
-        # Se sha è None, proviamo a recuperarlo (caso creazione/primo save)
         if sha is None:
             try:
                 contents = repo.get_contents(filename)
                 sha = contents.sha
             except:
-                # Se il file non esiste, lo crea
                 repo.create_file(filename, f"Create {filename}", json.dumps(content, indent=4))
                 return True
 
@@ -63,19 +61,18 @@ def save_file_to_github(filename, content, sha):
         return False
 
 # ==============================================================================
-# 2. CARICAMENTO DATI INIZIALE
+# 2. CARICAMENTO DATI
 # ==============================================================================
 
 if 'config' not in st.session_state:
-    # 1. Carica Configurazione (Operatori, Skill, etc)
     cfg_data, cfg_sha = get_file_from_github("config.json")
-    if cfg_data:
+    if cfg_data and "SERVICES" in cfg_data: # Check base validità
         st.session_state.config = cfg_data
         st.session_state.config_sha = cfg_sha
     else:
-        st.stop() # Blocco se manca la config
+        st.error("Errore: config.json mancante o non valido su GitHub. Carica il JSON corretto.")
+        st.stop()
     
-    # 2. Carica Assenze (Ferie, Permessi)
     leaves_data, leaves_sha = get_file_from_github("leaves.json")
     st.session_state.leaves = leaves_data if leaves_data else {}
     st.session_state.leaves_sha = leaves_sha
@@ -88,17 +85,16 @@ CONFIG = st.session_state.config
 # 3. INTERFACCIA
 # ==============================================================================
 
-tab_gen, tab_settings = st.tabs(["🗓️ GENERAZIONE TURNI & ASSENZE", "⚙️ IMPOSTAZIONI CLOUD"])
+tab_gen, tab_settings = st.tabs(["🗓️ GENERAZIONE TURNI", "⚙️ IMPOSTAZIONI"])
 
 # ------------------------------------------------------------------------------
 # TAB IMPOSTAZIONI
 # ------------------------------------------------------------------------------
 with tab_settings:
-    st.header("⚙️ Configurazione Strutturale")
-    st.info("Qui modifichi la struttura (Operatori, Skill). Le assenze si gestiscono nell'altra scheda.")
+    st.header("⚙️ Configurazione")
 
     # 1. SERVIZI
-    with st.expander("🎨 1. Servizi e Task", expanded=True):
+    with st.expander("🎨 1. Servizi e Colori", expanded=True):
         services = CONFIG["SERVICES"]
         c1, c2 = st.columns([3, 1])
         new_svc = c1.text_input("Nuovo Servizio")
@@ -140,12 +136,11 @@ with tab_settings:
             st.rerun()
 
     # 3. MATRICE SKILL
-    with st.expander("🛠️ 3. Matrice Competenze (Filtrata)", expanded=False):
+    with st.expander("🛠️ 3. Matrice Competenze", expanded=False):
         svc_names = list(CONFIG["SERVICES"].keys())
         if svc_names:
             sel_svc = st.selectbox("Filtra per Servizio:", svc_names)
             svc_tasks = CONFIG["SERVICES"][sel_svc]["tasks"]
-            # Nomenclatura fissa: "SERVIZIO: Task"
             cols_show = [f"{sel_svc}: {t}" for t in svc_tasks]
             
             rows = []
@@ -161,15 +156,13 @@ with tab_settings:
             if st.button(f"💾 Salva Competenze ({sel_svc})"):
                 for op, row in ed_sk.iterrows():
                     old = CONFIG["SKILLS"].get(op, [])
-                    # Rimuovi vecchie di questo servizio
                     others = [s for s in old if not s.startswith(f"{sel_svc}:")]
-                    # Aggiungi nuove
                     new_sel = [c for c in cols_show if row[c]]
                     CONFIG["SKILLS"][op] = others + new_sel
                 save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
                 st.success("Competenze salvate!")
 
-    # 4. TELEFONI E PAUSE
+    # 4. PAUSE
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
         c1, c2 = st.columns(2)
         with c1:
@@ -190,9 +183,8 @@ with tab_settings:
 # TAB GENERAZIONE
 # ------------------------------------------------------------------------------
 with tab_gen:
-    st.header("Gestione Mensile")
+    st.header("Gestione Turni")
     
-    # 1. SELETTORE PERIODO
     c1, c2, c3 = st.columns(3)
     with c1:
         mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
@@ -203,9 +195,7 @@ with tab_gen:
     with c3:
         max_tasks = st.slider("Max Task Simultanei", 1, 6, 3)
 
-    # Chiave univoca per salvare le ferie di questo mese
-    LEAVES_KEY = f"{anno_s}_{mese_n}" 
-    
+    LEAVES_KEY = f"{anno_s}_{mese_n}"
     _, nd = calendar.monthrange(anno_s, mese_n)
     days = [date(anno_s, mese_n, x) for x in range(1, nd+1)]
     hols = holidays.IT(years=anno_s)
@@ -214,80 +204,58 @@ with tab_gen:
     
     st.divider()
     
-    # 2. GESTIONE ASSENZE (Caricamento da leaves.json)
-    st.subheader(f"🌴 Gestione Assenze: {mese_s} {anno_s}")
+    # GESTIONE ASSENZE
+    current_leaves = st.session_state.leaves.get(LEAVES_KEY, {"ferie": {}, "p_matt": {}, "p_pom": {}})
     
-    # Recupera dati salvati o inizializza vuoti
-    current_leaves = st.session_state.leaves.get(LEAVES_KEY, {
-        "ferie": {}, "p_matt": {}, "p_pom": {}
-    })
-    
-    # Funzione helper per creare DataFrame editabile
-    def create_bool_df(saved_dict):
+    def create_bool_df(saved_dict, prefill=False):
         df = pd.DataFrame(False, index=ops, columns=cols)
-        # Pre-fill weekend se vuoto
-        for i, c in enumerate(cols):
-            if days[i].weekday() >= 5 or days[i] in hols: df[c] = True
+        # Pre-fill weekend solo se non ci sono dati salvati
+        if prefill and not saved_dict:
+            for i, c in enumerate(cols):
+                if days[i].weekday() >= 5 or days[i] in hols: df[c] = True
         
-        # Sovrascrivi con dati salvati
         if saved_dict:
-            # Ricostruiamo il DF dal dizionario salvato
             temp_df = pd.DataFrame(saved_dict)
-            # Allineiamo indici e colonne per sicurezza
             df.update(temp_df)
-            # Riempiamo i NaN con False (la update potrebbe generare NaN se le dimensioni cambiano)
             df = df.fillna(False).astype(bool)
         return df
 
-    # Tabella Ferie
-    t1, t2, t3 = st.tabs(["🔴 FERIE (Tutto il giorno)", "🟡 PERMESSI MATTINA", "🟠 PERMESSI POMERIGGIO"])
+    t1, t2, t3 = st.tabs(["🔴 FERIE", "🟡 P. MATTINA", "🟠 P. POMERIGGIO"])
     
     with t1:
-        st.caption("Spunta i giorni di ferie completa.")
-        df_ferie = create_bool_df(current_leaves.get("ferie"))
+        st.caption("Spunta i giorni di assenza (Ferie/Malattia). I weekend sono pre-compilati ma modificabili.")
+        df_ferie = create_bool_df(current_leaves.get("ferie"), prefill=True)
         in_ferie = st.data_editor(df_ferie, key="ed_ferie", height=250)
         
     with t2:
-        st.caption("Spunta i giorni dove l'operatore NON c'è la Mattina.")
-        # Qui partiamo da tutto False, i weekend non contano come permessi solitamente
-        df_pm = pd.DataFrame(False, index=ops, columns=cols)
-        if current_leaves.get("p_matt"): df_pm.update(pd.DataFrame(current_leaves["p_matt"]))
-        in_pm = st.data_editor(df_pm.astype(bool), key="ed_pm", height=250)
+        df_pm = create_bool_df(current_leaves.get("p_matt"))
+        in_pm = st.data_editor(df_pm, key="ed_pm", height=250)
 
     with t3:
-        st.caption("Spunta i giorni dove l'operatore NON c'è il Pomeriggio.")
-        df_pp = pd.DataFrame(False, index=ops, columns=cols)
-        if current_leaves.get("p_pom"): df_pp.update(pd.DataFrame(current_leaves["p_pom"]))
-        in_pp = st.data_editor(df_pp.astype(bool), key="ed_pp", height=250)
+        df_pp = create_bool_df(current_leaves.get("p_pom"))
+        in_pp = st.data_editor(df_pp, key="ed_pp", height=250)
 
-    # PULSANTE SALVATAGGIO ASSENZE
-    if st.button("💾 SALVA FERIE E PERMESSI SU CLOUD", type="secondary"):
-        with st.spinner("Salvataggio assenze..."):
-            # Aggiorniamo la struttura dati globale
+    if st.button("💾 SALVA ASSENZE SU CLOUD", type="secondary"):
+        with st.spinner("Salvataggio..."):
             st.session_state.leaves[LEAVES_KEY] = {
                 "ferie": in_ferie.to_dict(),
                 "p_matt": in_pm.to_dict(),
                 "p_pom": in_pp.to_dict()
             }
-            # Invio a GitHub su leaves.json
-            res = save_file_to_github("leaves.json", st.session_state.leaves, st.session_state.leaves_sha)
-            if res:
-                st.success(f"Assenze di {mese_s} salvate!")
-                # Rileggi SHA aggiornato
-                _, new_sha = get_file_from_github("leaves.json")
-                st.session_state.leaves_sha = new_sha
-            else:
-                st.error("Errore salvataggio assenze.")
+            save_file_to_github("leaves.json", st.session_state.leaves, st.session_state.leaves_sha)
+            _, new_sha = get_file_from_github("leaves.json")
+            st.session_state.leaves_sha = new_sha
+            st.success("Assenze salvate!")
 
     st.divider()
 
-    # 3. GENERAZIONE (Che usa i dati sopra)
+    # GENERAZIONE
     if st.button("🚀 CALCOLA TURNI", type="primary"):
         out = {}
         missing = {}
         cnt = {op: {} for op in ops}
         
-        # Logica Task
+        # Mappa colori
         all_tasks = []
         col_map = {}
         for s, d in CONFIG["SERVICES"].items():
@@ -302,37 +270,37 @@ with tab_gen:
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # Festivo
-            if d_obj in hols:
+            # Festivi e Weekend: Se segnati come Ferie, salta. Altrimenti lavora.
+            is_holiday = d_obj in hols
+            is_weekend = d_obj.weekday() >= 5
+            
+            # Se è festivo/weekend E tutti hanno ferie (o sono assenti) -> Salta
+            # Ma se l'utente ha tolto la spunta a qualcuno, lo assegniamo.
+            # Logica: Se è weekend e la persona è in ferie, salta persona.
+            # Se tutti saltano, giorno vuoto.
+            
+            if is_holiday:
                 out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
                 continue
-            
-            # Weekend (se in ferie/weekend su tabella ferie)
-            # Se la tabella ferie ha la spunta ed è weekend, allora non lavora
-            if d_obj.weekday() >= 5 and not any(in_ferie[col]):
-                 out[col] = {op: "" for op in ops}
-                 continue
 
             day_ass = {op: "" for op in ops}
             avail = []
             
             for op in ops:
-                # Priorità: Ferie > Permessi
-                if in_ferie.at[op, col]: 
-                    day_ass[op] = "FERIE"
-                elif in_pm.at[op, col]:
-                    day_ass[op] = "P.MATT"
-                    avail.append(op) # È disponibile (al pomeriggio), quindi lo aggiungiamo
-                elif in_pp.at[op, col]:
-                    day_ass[op] = "P.POM"
-                    avail.append(op) # È disponibile (alla mattina)
-                else:
-                    avail.append(op)
+                if in_ferie.at[op, col]: day_ass[op] = "FERIE"
+                elif in_pm.at[op, col]: day_ass[op] = "P.MATT"; avail.append(op)
+                elif in_pp.at[op, col]: day_ass[op] = "P.POM"; avail.append(op)
+                else: avail.append(op)
             
+            # Se nessuno è disponibile (es. domenica tutti in ferie), salta assegnazione
+            if not avail:
+                out[col] = day_ass # Lascia solo le scritte FERIE
+                continue
+
             day_tasks = copy.deepcopy(all_tasks)
             
             def load(op):
-                if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99 # Già impegnato parzialmente
+                if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
                 if not day_ass[op]: return 0
                 return day_ass[op].count('+') + 1
 
@@ -355,7 +323,6 @@ with tab_gen:
                         if day_ass[op] not in ["FERIE"]: chosen = op; break
                 
                 if chosen:
-                    # Se ha un permesso, mettiamo il task in coda
                     prefix = f"({day_ass[chosen]}) " if "P." in day_ass[chosen] else ""
                     if day_ass[chosen] and "P." not in day_ass[chosen]: 
                         day_ass[chosen] += f" + {t}"
@@ -369,33 +336,42 @@ with tab_gen:
             random.shuffle(slots)
             s_i = 0
             for op in avail:
-                is_full_ferie = (day_ass[op] == "FERIE")
-                if not is_full_ferie and "🎉" not in day_ass[op]:
-                    # Assegna pausa solo se non ha permessi (semplificazione, o logica custom)
-                    # Se ha P.MATT o P.POM magari salta la pausa o ha orario ridotto? 
-                    # Per ora assegniamo pausa a tutti quelli che lavorano
-                    if "P." not in day_ass[op]:
-                        p = CONFIG["PAUSE"]["FISSI"].get(op)
-                        if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
-                        if p: day_ass[op] += f"\n☕ {p}"
+                if "P." not in day_ass[op]: # Solo chi fa giornata intera
+                    p = CONFIG["PAUSE"]["FISSI"].get(op)
+                    if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
+                    if p: day_ass[op] += f"\n☕ {p}"
                     
-                    tel = CONFIG["TELEFONI"].get(op)
-                    if tel: day_ass[op] = f"☎️ {tel}\n" + day_ass[op]
+                tel = CONFIG["TELEFONI"].get(op)
+                if tel: day_ass[op] = f"☎️ {tel}\n" + day_ass[op]
             
             out[col] = day_ass
             
-        res = pd.DataFrame(out)
+        res_df = pd.DataFrame(out)
         def styler(v):
             s = str(v)
             if "FERIE" in s: return "background-color: #e06666"
-            if "P." in s: return "background-color: #ffd966" # Giallo per permessi
+            if "P." in s: return "background-color: #ffd966"
             if "🎉" in s: return "background-color: #f4cccc"
             for t, c in col_map.items():
                 if t in s: return f"background-color: {c}"
             return ""
-            
+
         st.success("Turni Calcolati!")
-        st.dataframe(res.style.applymap(styler), use_container_width=True)
-        if missing: st.warning("Task scoperti:"); st.json(missing)
         
-        st.download_button("Scarica CSV", res.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
+        # VISUALIZZAZIONE SETTIMANALE
+        weeks = []
+        curr_week = []
+        for col in res_df.columns:
+            if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
+            curr_week.append(col)
+        if curr_week: weeks.append(curr_week)
+
+        for i, w_cols in enumerate(weeks):
+            st.markdown(f"### 📅 Settimana {i+1}")
+            st.dataframe(res_df[w_cols].style.applymap(styler), use_container_width=True)
+            with st.expander(f"Copia Settimana {i+1}"):
+                st.code(res_df[w_cols].to_csv(sep='\t'), language='text')
+            st.markdown("---")
+
+        if missing: st.warning("Task scoperti:"); st.json(missing)
+        st.download_button("Scarica Mese Completo", res_df.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
