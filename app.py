@@ -217,12 +217,13 @@ with tab_gen:
     _, nd = calendar.monthrange(anno_s, mese_n)
     days = [date(anno_s, mese_n, x) for x in range(1, nd+1)]
     hols = holidays.IT(years=anno_s)
+    # Generiamo tutte le colonne (anche weekend) per l'input
     cols = [f"{d.day:02d} {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'][d.weekday()]}" for d in days]
     ops = CONFIG["OPERATORS"]
     
     st.divider()
     
-    # GESTIONE ASSENZE
+    # GESTIONE ASSENZE (Input include weekend)
     current_leaves = st.session_state.leaves.get(LEAVES_KEY, {"ferie": {}, "p_matt": {}, "p_pom": {}})
     
     def create_bool_df(saved_dict, prefill=False):
@@ -271,7 +272,6 @@ with tab_gen:
         missing = {}
         cnt = {op: {} for op in ops}
         
-        # Mappa colori
         all_tasks = []
         col_map = {}
         for s, d in CONFIG["SERVICES"].items():
@@ -286,13 +286,13 @@ with tab_gen:
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # 1. GESTIONE FESTIVI
+            # CALCOLO (Anche weekend per logica interna, se necessario)
+            # Ma se è sabato/domenica, non assegniamo task.
             if d_obj in hols:
                  out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
                  continue
-
-            # 2. GESTIONE WEEKEND (SABATO E DOMENICA)
-            # Regola rigorosa: Se è weekend, non si assegna NULLA. Cella vuota.
+            
+            # Se weekend: Cella vuota
             if d_obj.weekday() >= 5:
                 out[col] = {op: "" for op in ops}
                 continue
@@ -306,7 +306,6 @@ with tab_gen:
                 elif in_pp.at[op, col]: day_ass[op] = "P.POM"; avail.append(op)
                 else: avail.append(op)
             
-            # Se nessuno è disponibile (es. ponte aziendale non festivo)
             if not avail:
                 out[col] = day_ass
                 continue
@@ -338,54 +337,4 @@ with tab_gen:
                 
                 if chosen:
                     prefix = f"({day_ass[chosen]}) " if "P." in day_ass[chosen] else ""
-                    if day_ass[chosen] and "P." not in day_ass[chosen]: 
-                        day_ass[chosen] += f" + {t}"
-                    else: 
-                        day_ass[chosen] = prefix + t
-                    
-                    cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
-            
-            # Pause & Telefoni
-            slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
-            random.shuffle(slots)
-            s_i = 0
-            for op in avail:
-                if "P." not in day_ass[op]: 
-                    p = CONFIG["PAUSE"]["FISSI"].get(op)
-                    if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
-                    if p: day_ass[op] += f"\n☕ {p}"
-                    
-                tel = CONFIG["TELEFONI"].get(op)
-                if tel: day_ass[op] = f"☎️ {tel}\n" + day_ass[op]
-            
-            out[col] = day_ass
-            
-        res_df = pd.DataFrame(out)
-        def styler(v):
-            s = str(v)
-            if "FERIE" in s: return "background-color: #ffc4c4" # Rosso Pastello Delicato
-            if "P." in s: return "background-color: #ffd966"
-            if "🎉" in s: return "background-color: #f4cccc"
-            for t, c in col_map.items():
-                if t in s: return f"background-color: {c}"
-            return ""
-
-        st.success("Turni Calcolati!")
-        
-        # VISTA SETTIMANALE
-        weeks = []
-        curr_week = []
-        for col in res_df.columns:
-            if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
-            curr_week.append(col)
-        if curr_week: weeks.append(curr_week)
-
-        for i, w_cols in enumerate(weeks):
-            st.markdown(f"### 📅 Settimana {i+1}")
-            st.dataframe(res_df[w_cols].style.applymap(styler), use_container_width=True)
-            with st.expander(f"Copia Settimana {i+1}"):
-                st.code(res_df[w_cols].to_csv(sep='\t'), language='text')
-            st.markdown("---")
-
-        if missing: st.warning("Task scoperti:"); st.json(missing)
-        st.download_button("Scarica Mese Completo", res_df.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
+                    if day_ass[chosen] and "P." not in day_ass
