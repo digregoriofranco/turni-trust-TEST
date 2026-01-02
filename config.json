@@ -1,166 +1,59 @@
 {
     "OPERATORS": [
-        "Gurpal S.",
-        "Nicola T.",
-        "Paolo G.",
-        "Lorenzo T.",
-        "Andrea V.",
-        "Federico P.",
-        "Erica B.",
-        "Daniela C.",
-        "Francesca F.",
-        "Lorenza V.",
-        "Daniela G.",
-        "Katia B.",
-        "Caterina B.",
-        "Maria S."
+        "Gurpal S.", "Nicola T.", "Paolo G.", "Lorenzo T.", "Andrea V.",
+        "Federico P.", "Erica B.", "Daniela C.", "Francesca F.", "Lorenza V.",
+        "Daniela G.", "Katia B.", "Caterina B.", "Maria S."
     ],
     "SERVICES": {
         "FATTURAZIONE": {
-            "color": "#ccffda",
-            "tasks": [
-                "cc.fatturazione",
-                "SDO",
-                "PECMAN"
-            ]
+            "color": "#4FFF81",
+            "tasks": ["cc.fatturazione", "SDO", "PECMAN"]
         },
         "FIRMA": {
-            "color": "#ffe1b3",
-            "tasks": [
-                "cc.firma",
-                "PECMAN/SDO (Firma)"
-            ]
+            "color": "#ffb74f",
+            "tasks": ["cc.firma", "PECMAN/SDO (Firma)"]
         },
         "SPID": {
             "color": "#549ff5",
-            "tasks": [
-                "cc.spid",
-                "PECMAN/SDO (SPID)"
-            ]
+            "tasks": ["cc.spid", "PECMAN/SDO (SPID)"]
         },
         "PEC": {
-            "color": "#ffb3b3",
+            "color": "#FF5353",
             "tasks": [
-                "reparto.pec",
-                "Caselle attesa attivazione",
-                "PECMAN/SDO escalation",
-                "Caselle Occupate",
-                "PECMAN/SDO MATTINA",
-                "PECMAN/SDO POMERIGGIO"
+                "reparto.pec", "Caselle attesa attivazione", "PECMAN/SDO escalation",
+                "Caselle Occupate", "PECMAN/SDO MATTINA", "PECMAN/SDO POMERIGGIO"
             ]
         }
     },
     "SKILLS": {
-        "Gurpal S.": [
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
-        ],
-        "Nicola T.": [
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid",
-            "PEC: reparto.pec",
-            "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
-        ],
-        "Paolo G.": [
-            "PEC: reparto.pec",
-            "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
-        ],
-        "Lorenzo T.": [
-            "PEC: reparto.pec",
-            "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
-        ],
-        "Andrea V.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)"
-        ],
-        "Federico P.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
-            "PEC: reparto.pec",
-            "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
-        ],
-        "Erica B.": [
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
-        "Daniela C.": [
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
-        "Francesca F.": [
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
-        "Lorenza V.": [
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid"
-        ],
-        "Daniela G.": [
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid",
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
-        "Katia B.": [
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
-        "Caterina B.": [
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
-        ],
+        "Gurpal S.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN"],
+        "Nicola T.": ["SPID: PECMAN/SDO (SPID)", "SPID: cc.spid", "PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
+        "Paolo G.": ["PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
+        "Lorenzo T.": ["PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
+        "Andrea V.": ["FIRMA: cc.firma", "FIRMA: PECMAN/SDO (Firma)"],
+        "Federico P.": ["FIRMA: cc.firma", "FIRMA: PECMAN/SDO (Firma)", "PEC: reparto.pec", "PEC: Caselle attesa attivazione", "PEC: PECMAN/SDO escalation"],
+        "Erica B.": ["PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
+        "Daniela C.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
+        "Francesca F.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
+        "Lorenza V.": ["FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "SPID: PECMAN/SDO (SPID)", "SPID: cc.spid"],
+        "Daniela G.": ["SPID: PECMAN/SDO (SPID)", "SPID: cc.spid", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
+        "Katia B.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN", "PEC: Caselle Occupate", "PEC: PECMAN/SDO MATTINA", "PEC: PECMAN/SDO POMERIGGIO"],
+        "Caterina B.": ["FATTURAZIONE: cc.fatturazione", "FATTURAZIONE: SDO", "FATTURAZIONE: PECMAN"],
         "Maria S.": []
     },
     "PAUSE": {
         "FISSI": {
-            "Nicola T.": "13:00 - 14:30",
-            "Paolo G.": "13:30 - 15:00",
-            "Lorenzo T.": "13:00 - 14:30",
-            "Andrea V.": "13:00 - 14:30",
-            "Federico P.": "13:00 - 14:30",
-            "Erica B.": "13:00 - 14:30",
-            "Daniela C.": "13:30 - 15:00",
-            "Francesca F.": "13:00 - 14:30",
-            "Lorenza V.": "13:00 - 14:30",
-            "Daniela G.": "13:00 - 14:30",
-            "Caterina B.": "13:00 - 14:30",
-            "Maria S.": "13:00 - 14:30"
+            "Nicola T.": "13:00 - 14:30", "Paolo G.": "13:30 - 15:00", "Lorenzo T.": "13:00 - 14:30",
+            "Andrea V.": "13:00 - 14:30", "Federico P.": "13:00 - 14:30", "Erica B.": "13:00 - 14:30",
+            "Daniela C.": "13:30 - 15:00", "Francesca F.": "13:00 - 14:30", "Lorenza V.": "13:00 - 14:30",
+            "Daniela G.": "13:00 - 14:30", "Caterina B.": "13:00 - 14:30", "Maria S.": "13:00 - 14:30"
         },
-        "SLOTS": [
-            "12:30 - 14:00",
-            "13:30 - 15:00"
-        ]
+        "SLOTS": ["12:30 - 14:00", "13:00 - 14:30", "13:30 - 15:00"]
     },
     "TELEFONI": {
-        "Gurpal S.": "11:00 - 12:00",
-        "Nicola T.": "11:00 - 12:00",
-        "Paolo G.": "12:00 - 13:00",
-        "Lorenzo T.": "09:00 - 10:00",
-        "Andrea V.": "10:00 - 11:00",
-        "Federico P.": "11:00 - 12:00",
-        "Erica B.": "10:00 - 11:00",
-        "Daniela C.": "15:00 - 16:00",
-        "Francesca F.": "10:00 - 11:00",
+        "Gurpal S.": "11:00 - 12:00", "Nicola T.": "11:00 - 12:00", "Paolo G.": "12:00 - 13:00",
+        "Lorenzo T.": "09:00 - 10:00", "Andrea V.": "10:00 - 11:00", "Federico P.": "11:00 - 12:00",
+        "Erica B.": "10:00 - 11:00", "Daniela C.": "15:00 - 16:00", "Francesca F.": "10:00 - 11:00",
         "Katia B.": "10:00 - 11:00"
     }
 }
