@@ -109,15 +109,25 @@ tab_gen, tab_settings = st.tabs(["🗓️ GENERAZIONE TURNI", "⚙️ IMPOSTAZIO
 with tab_settings:
     st.header("⚙️ Configurazione")
 
-    # 1. SERVIZI
+    # 1. SERVIZI (NUOVA GRAFICA SEPARATA)
     with st.expander("🎨 1. Servizi e Colori", expanded=True):
         services = CONFIG["SERVICES"]
-        c1, c2 = st.columns([3, 1])
-        new_svc = c1.text_input("Nuovo Servizio")
-        if c2.button("➕ Aggiungi") and new_svc:
-            services[new_svc] = {"color": "#cccccc", "tasks": []}
-            success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-            if success: st.session_state.config_sha = new_sha; st.rerun()
+        
+        # --- SEZIONE AGGIUNGI (SEPARATA) ---
+        st.markdown("#### ➕ Crea Nuovo Servizio")
+        with st.container(border=True):
+            c1, c2 = st.columns([3, 1])
+            new_svc = c1.text_input("Nome del nuovo servizio (es. AMMINISTRAZIONE)")
+            if c2.button("Aggiungi Servizio"):
+                if new_svc and new_svc not in services:
+                    services[new_svc] = {"color": "#cccccc", "tasks": []}
+                    save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                    st.rerun()
+                elif new_svc in services:
+                    st.warning("Servizio già esistente.")
+        
+        st.divider()
+        st.markdown("#### ✏️ Modifica Servizi Esistenti")
 
         for s_name, s_data in services.items():
             c_col, c_name, c_del = st.columns([0.5, 3, 1])
@@ -130,15 +140,17 @@ with tab_settings:
             tasks_str = "\n".join(s_data["tasks"])
             new_tasks = st.text_area(f"Task {s_name}", value=tasks_str, height=100, key=f"t_{s_name}")
             
-            if st.button(f"💾 Aggiorna {s_name}"):
+            # Riga pulsanti
+            cb1, cb2 = st.columns([1, 5])
+            if cb1.button(f"💾 Salva {s_name}"):
                 s_data["tasks"] = [t.strip() for t in new_tasks.split("\n") if t.strip()]
-                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                if success: st.session_state.config_sha = new_sha; st.rerun()
+                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                st.rerun()
             
-            if c_del.button("🗑️", key=f"del_{s_name}"):
+            if c_del.button("🗑️ Elimina Servizio", key=f"del_{s_name}"):
                 del services[s_name]
-                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                if success: st.session_state.config_sha = new_sha; st.rerun()
+                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                st.rerun()
             st.divider()
 
     # 2. OPERATORI
@@ -148,8 +160,8 @@ with tab_settings:
         if st.button("💾 Salva Operatori"):
             CONFIG["OPERATORS"] = [x.strip() for x in new_ops.split("\n") if x.strip()]
             CONFIG["SKILLS"] = {op: CONFIG["SKILLS"].get(op, []) for op in CONFIG["OPERATORS"]}
-            success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-            if success: st.session_state.config_sha = new_sha; st.rerun()
+            save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            st.rerun()
 
     # 3. MATRICE SKILL
     with st.expander("🛠️ 3. Matrice Competenze", expanded=False):
@@ -175,8 +187,8 @@ with tab_settings:
                     others = [s for s in old if not s.startswith(f"{sel_svc}:")]
                     new_sel = [c for c in cols_show if row[c]]
                     CONFIG["SKILLS"][op] = others + new_sel
-                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                if success: st.session_state.config_sha = new_sha; st.success("Salvato!")
+                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                st.success("Competenze salvate!")
 
     # 4. PAUSE
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
@@ -187,15 +199,13 @@ with tab_settings:
             ed_ph = st.data_editor(ph_df, hide_index=True)
             if st.button("💾 Salva Telefoni"):
                 CONFIG["TELEFONI"] = {r["Operatore"]: r["Orario"] for _, r in ed_ph.iterrows() if r["Orario"]}
-                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                if success: st.session_state.config_sha = new_sha
+                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
         with c2:
             st.markdown("**Slot Pause**")
             slots = st.text_area("Slot", value="\n".join(CONFIG["PAUSE"]["SLOTS"]))
             if st.button("💾 Salva Slot"):
                 CONFIG["PAUSE"]["SLOTS"] = [x.strip() for x in slots.split("\n") if x.strip()]
-                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                if success: st.session_state.config_sha = new_sha
+                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
 
 # ------------------------------------------------------------------------------
 # TAB GENERAZIONE
@@ -217,31 +227,37 @@ with tab_gen:
     _, nd = calendar.monthrange(anno_s, mese_n)
     days = [date(anno_s, mese_n, x) for x in range(1, nd+1)]
     hols = holidays.IT(years=anno_s)
-    # Generiamo tutte le colonne (anche weekend) per l'input
     cols = [f"{d.day:02d} {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'][d.weekday()]}" for d in days]
     ops = CONFIG["OPERATORS"]
     
     st.divider()
     
-    # GESTIONE ASSENZE (Input include weekend)
+    # GESTIONE ASSENZE
     current_leaves = st.session_state.leaves.get(LEAVES_KEY, {"ferie": {}, "p_matt": {}, "p_pom": {}})
     
-    def create_bool_df(saved_dict, prefill=False):
+    def create_bool_df(saved_dict, prefill_weekends=False):
         df = pd.DataFrame(False, index=ops, columns=cols)
-        if prefill and not saved_dict:
+        
+        # Se non ci sono dati salvati (o se vogliamo forzare la visualizzazione)
+        # precompiliamo i weekend e festivi come True (selezionati)
+        if prefill_weekends and not saved_dict:
             for i, c in enumerate(cols):
-                if days[i].weekday() >= 5 or days[i] in hols: df[c] = True
+                if days[i].weekday() >= 5 or days[i] in hols: 
+                    df[c] = True
+                    
         if saved_dict:
             temp_df = pd.DataFrame(saved_dict)
             df.update(temp_df)
             df = df.fillna(False).astype(bool)
+            
         return df
 
     t1, t2, t3 = st.tabs(["🔴 FERIE", "🟡 P. MATTINA", "🟠 P. POMERIGGIO"])
     
     with t1:
-        st.caption("Spunta i giorni di assenza completa.")
-        df_ferie = create_bool_df(current_leaves.get("ferie"), prefill=True)
+        st.caption("Spunta i giorni di assenza completa. Sabati, Domeniche e Festivi sono selezionati automaticamente se non ci sono dati salvati.")
+        # Attiviamo prefill_weekends=True per le Ferie
+        df_ferie = create_bool_df(current_leaves.get("ferie"), prefill_weekends=True)
         in_ferie = st.data_editor(df_ferie, key="ed_ferie", height=250)
         
     with t2:
@@ -272,6 +288,7 @@ with tab_gen:
         missing = {}
         cnt = {op: {} for op in ops}
         
+        # Mappa colori
         all_tasks = []
         col_map = {}
         for s, d in CONFIG["SERVICES"].items():
@@ -286,14 +303,12 @@ with tab_gen:
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # CALCOLO (Anche weekend per logica interna, se necessario)
-            # Ma se è sabato/domenica, non assegniamo task.
+            # CALCOLO: Se è festivo o weekend, il turno è vuoto/festivo
             if d_obj in hols:
                  out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
                  continue
             
-            # Se weekend: Cella vuota
-            if d_obj.weekday() >= 5:
+            if d_obj.weekday() >= 5: # Weekend
                 out[col] = {op: "" for op in ops}
                 continue
 
@@ -344,7 +359,7 @@ with tab_gen:
                     
                     cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
             
-            # Pause & Telefoni
+            # Pause
             slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
             random.shuffle(slots)
             s_i = 0
@@ -354,28 +369,32 @@ with tab_gen:
                     if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
                     if p: day_ass[op] += f"\n☕ {p}"
                     
-                tel = CONFIG["TELEFONI"].get(op)
-                if tel: day_ass[op] = f"☎️ {tel}\n" + day_ass[op]
+            # NOTA: TELEFONO SPOSTATO NEL NOME (VEDI SOTTO), QUI NON LO AGGIUNGIAMO ALLA CELLA
             
             out[col] = day_ass
             
         res_df = pd.DataFrame(out)
 
-        # -----------------------------------------------------------
-        # FILTRO VISUALIZZAZIONE: RIMUOVI COLONNE SAB/DOM/FESTIVI
-        # -----------------------------------------------------------
-        # Creiamo una lista delle colonne da mostrare (solo Lun-Ven non festivi)
+        # 1. RIMUOVI COLONNE WEEKEND E FESTIVI DALLA VISUALIZZAZIONE
         cols_to_show = [
             c for i, c in enumerate(cols) 
-            if days[i].weekday() < 5  # No Sabato(5) o Domenica(6)
+            if days[i].weekday() < 5 and days[i] not in hols
         ]
-        
-        # Filtriamo il DataFrame finale
         final_view_df = res_df[cols_to_show]
+
+        # 2. AGGIUNGI ORARIO TELEFONO AL NOME OPERATORE (INDEX)
+        new_index = []
+        for op in final_view_df.index:
+            tel = CONFIG["TELEFONI"].get(op)
+            if tel:
+                new_index.append(f"{op} (☎️ {tel})")
+            else:
+                new_index.append(op)
+        final_view_df.index = new_index
 
         def styler(v):
             s = str(v)
-            if "FERIE" in s: return "background-color: #ffc4c4" # ROSSO PASTELLO DELICATO
+            if "FERIE" in s: return "background-color: #ffc4c4" # ROSSO PASTELLO
             if "P." in s: return "background-color: #ffd966"
             if "🎉" in s: return "background-color: #f4cccc"
             for t, c in col_map.items():
@@ -384,10 +403,11 @@ with tab_gen:
 
         st.success("Turni Calcolati!")
         
-        # VISTA SETTIMANALE (Basata sulle colonne filtrate)
+        # VISTA SETTIMANALE
         weeks = []
         curr_week = []
         for col in final_view_df.columns:
+            # Semplice logica di raggruppamento settimanale basata sui nomi (Lun..Ven)
             if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
             curr_week.append(col)
         if curr_week: weeks.append(curr_week)
