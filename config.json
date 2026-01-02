@@ -49,13 +49,6 @@
                 "PECMAN/SDO MATTINA",
                 "PECMAN/SDO POMERIGGIO"
             ]
-        },
-        "Scontrina": {
-            "color": "#d9aaff",
-            "tasks": [
-                "Presidio Chat Mattina",
-                "Presidio Chat Pomeriggio"
-            ]
         }
     },
     "SKILLS": {
