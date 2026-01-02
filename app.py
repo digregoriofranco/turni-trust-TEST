@@ -9,6 +9,39 @@ import holidays
 from github import Github, GithubException
 
 st.set_page_config(page_title="Turni Trust Pro - Cloud", layout="wide")
+
+# ==============================================================================
+# 0. SISTEMA DI LOGIN (PROTEZIONE)
+# ==============================================================================
+def check_password():
+    """Ritorna True se l'utente ha inserito la password corretta."""
+    
+    # Se la password non è impostata nei secrets, avvisa l'utente (ma non bloccare se è locale)
+    if "APP_PASSWORD" not in st.secrets:
+        st.warning("⚠️ ATTENZIONE: Nessuna password impostata nei Secrets (chiave 'APP_PASSWORD'). L'app è accessibile a tutti.")
+        return True
+
+    if "password_correct" not in st.session_state:
+        st.session_state.password_correct = False
+
+    if st.session_state.password_correct:
+        return True
+
+    st.title("🔒 Area Riservata")
+    pwd_input = st.text_input("Inserisci la Password di accesso", type="password")
+    
+    if pwd_input:
+        if pwd_input == st.secrets["APP_PASSWORD"]:
+            st.session_state.password_correct = True
+            st.rerun()
+        else:
+            st.error("Password errata. Riprova.")
+            
+    return False
+
+if not check_password():
+    st.stop() # Blocca l'esecuzione se non loggato
+
 st.title("☁️ Turni Trust - Cloud Connected")
 
 # ==============================================================================
@@ -97,7 +130,7 @@ if 'config' not in st.session_state:
     st.session_state.shifts = shifts_data if shifts_data else {}
     st.session_state.shifts_sha = shifts_sha
     
-    st.toast("Dati sincronizzati col Cloud!", icon="☁️")
+    st.toast("Accesso effettuato e dati sincronizzati!", icon="🔓")
 
 CONFIG = st.session_state.config
 
@@ -263,7 +296,7 @@ with tab_settings:
                 save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
                 st.success("Salvato!")
 
-    # 4. PAUSE E TELEFONI
+    # 4. PAUSE
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
         c1, c2 = st.columns(2)
         
@@ -278,39 +311,33 @@ with tab_settings:
             
         with c2:
             st.markdown("#### 🥪 Gestione Pause (Fisse vs Variabili)")
-            st.info("Se lasci l'orario **VUOTO**, la pausa sarà **VARIABILE** (a rotazione sugli slot disponibili sotto). Se scrivi un orario, sarà **FISSA**.")
+            st.info("Se lasci l'orario **VUOTO**, la pausa sarà **VARIABILE**. Se scrivi un orario, sarà **FISSA**.")
             
-            # Tabella Pause Fisse
             pause_rows = []
             for op in CONFIG["OPERATORS"]:
-                # Se c'è una pausa fissa salvata, la mostriamo, altrimenti vuoto
                 fixed_p = CONFIG["PAUSE"]["FISSI"].get(op, "")
                 pause_rows.append({"Operatore": op, "Orario Pausa (Es. 13:00)": fixed_p})
             
             df_pause = pd.DataFrame(pause_rows)
             ed_pause = st.data_editor(df_pause, hide_index=True, use_container_width=True, key="pause_editor")
             
-            st.markdown("##### 🎰 Slot per Pause Variabili (Rotazione)")
+            st.markdown("##### 🎰 Slot per Pause Variabili")
             slots_str = "\n".join(CONFIG["PAUSE"]["SLOTS"])
             new_slots = st.text_area("Elenco Slot (uno per riga)", value=slots_str, height=100)
 
-        # Pulsante unico di salvataggio per la sezione
         if st.button("💾 Salva Telefoni e Pause"):
-            # 1. Salva Telefoni
             new_telefoni = {}
             for index, row in ed_ph.iterrows():
                 if row["Orario Telefono"]:
                     new_telefoni[row["Operatore"]] = row["Orario Telefono"]
             CONFIG["TELEFONI"] = new_telefoni
             
-            # 2. Salva Pause Fisse
             new_fissi = {}
             for index, row in ed_pause.iterrows():
                 if row["Orario Pausa (Es. 13:00)"]:
                     new_fissi[row["Operatore"]] = row["Orario Pausa (Es. 13:00)"]
             CONFIG["PAUSE"]["FISSI"] = new_fissi
             
-            # 3. Salva Slot
             CONFIG["PAUSE"]["SLOTS"] = [x.strip() for x in new_slots.split("\n") if x.strip()]
             
             save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
@@ -331,6 +358,7 @@ with tab_gen:
     with c2:
         anno_s = st.number_input("Anno", 2024, 2030, 2026)
     with c3:
+        # DEFAULT CAMBIATO DA 3 A 2
         max_tasks = st.slider("Max Task Simultanei", 1, 6, 2)
 
     LEAVES_KEY = f"{anno_s}_{mese_n}"
@@ -444,7 +472,7 @@ with tab_gen:
             tasks_to_assign = copy.deepcopy(all_tasks)
             assigned_this_day = []
             
-            # SMART UPDATE LOGIC
+            # SMART UPDATE
             if smart_update and saved_shifts_for_month and col in saved_shifts_for_month:
                 saved_day = saved_shifts_for_month[col]
                 for op in available_ops:
@@ -460,7 +488,7 @@ with tab_gen:
                                 if op not in weekly_assignments: weekly_assignments[op] = []
                                 weekly_assignments[op].extend(found_tasks)
 
-            # STANDARD ASSIGNMENT
+            # STANDARD
             for op in available_ops:
                 if op not in assigned_this_day and op in weekly_assignments:
                     my_weekly = weekly_assignments[op]
@@ -475,7 +503,7 @@ with tab_gen:
                         else: day_ass[op] = prefix + t_str
                         assigned_this_day.append(op)
 
-            # New Tasks
+            # NEW TASKS
             def load(op):
                 if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
                 if op in assigned_this_day: return day_ass[op].count('+') + 1
@@ -534,14 +562,12 @@ with tab_gen:
             
             out[col] = day_ass
             
-        # SALVATAGGIO
         st.session_state.shifts[LEAVES_KEY] = out
         res, new_sha = save_file_to_github("shifts.json", st.session_state.shifts, st.session_state.shifts_sha)
         if res:
              st.session_state.shifts_sha = new_sha
              st.toast("Turni salvati!", icon="💾")
 
-        # VISUALIZZAZIONE
         res_df = pd.DataFrame(out)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
         final_view = res_df[cols_to_show]
@@ -571,7 +597,4 @@ with tab_gen:
             t = CONFIG["TELEFONI"].get(op)
             new_idx_viz.append(f"{op} (☎️ {t})" if t else op)
         saved_view.index = new_idx_viz
-
         display_weeks(saved_view, get_style_map(), mese_s, anno_s)
-
-
