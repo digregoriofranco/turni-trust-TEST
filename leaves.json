@@ -15,7 +15,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "02 Ven": {
                 "Gurpal S.": false,
@@ -31,7 +32,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": false,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "03 Sab": {
                 "Gurpal S.": true,
@@ -47,7 +49,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "04 Dom": {
                 "Gurpal S.": true,
@@ -63,7 +66,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "05 Lun": {
                 "Gurpal S.": false,
@@ -79,7 +83,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": false,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "06 Mar": {
                 "Gurpal S.": true,
@@ -95,7 +100,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "07 Mer": {
                 "Gurpal S.": false,
@@ -111,7 +117,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "08 Gio": {
                 "Gurpal S.": false,
@@ -127,7 +134,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "09 Ven": {
                 "Gurpal S.": false,
@@ -143,7 +151,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "10 Sab": {
                 "Gurpal S.": true,
@@ -159,7 +168,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "11 Dom": {
                 "Gurpal S.": true,
@@ -175,7 +185,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "12 Lun": {
                 "Gurpal S.": false,
@@ -191,7 +202,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "13 Mar": {
                 "Gurpal S.": false,
@@ -207,7 +219,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "14 Mer": {
                 "Gurpal S.": false,
@@ -223,7 +236,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "15 Gio": {
                 "Gurpal S.": false,
@@ -239,7 +253,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "16 Ven": {
                 "Gurpal S.": false,
@@ -255,7 +270,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "17 Sab": {
                 "Gurpal S.": true,
@@ -271,7 +287,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "18 Dom": {
                 "Gurpal S.": true,
@@ -287,7 +304,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "19 Lun": {
                 "Gurpal S.": false,
@@ -303,7 +321,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "20 Mar": {
                 "Gurpal S.": false,
@@ -319,7 +338,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "21 Mer": {
                 "Gurpal S.": false,
@@ -335,7 +355,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "22 Gio": {
                 "Gurpal S.": false,
@@ -351,7 +372,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "23 Ven": {
                 "Gurpal S.": false,
@@ -367,7 +389,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "24 Sab": {
                 "Gurpal S.": true,
@@ -383,7 +406,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "25 Dom": {
                 "Gurpal S.": true,
@@ -399,7 +423,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             },
             "26 Lun": {
                 "Gurpal S.": false,
@@ -415,7 +440,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": true,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "27 Mar": {
                 "Gurpal S.": false,
@@ -431,7 +457,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": true,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "28 Mer": {
                 "Gurpal S.": false,
@@ -447,7 +474,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": true,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "29 Gio": {
                 "Gurpal S.": false,
@@ -463,7 +491,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": true,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "30 Ven": {
                 "Gurpal S.": false,
@@ -479,7 +508,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": true,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "31 Sab": {
                 "Gurpal S.": true,
@@ -495,7 +525,8 @@
                 "Daniela G.": true,
                 "Katia B.": true,
                 "Caterina B.": true,
-                "Maria S.": true
+                "Maria S.": true,
+                "Pietro P.": false
             }
         },
         "p_matt": {
@@ -513,7 +544,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "02 Ven": {
                 "Gurpal S.": false,
@@ -529,7 +561,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "03 Sab": {
                 "Gurpal S.": false,
@@ -545,7 +578,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "04 Dom": {
                 "Gurpal S.": false,
@@ -561,7 +595,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "05 Lun": {
                 "Gurpal S.": false,
@@ -577,7 +612,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "06 Mar": {
                 "Gurpal S.": false,
@@ -593,7 +629,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "07 Mer": {
                 "Gurpal S.": false,
@@ -609,7 +646,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "08 Gio": {
                 "Gurpal S.": false,
@@ -625,7 +663,8 @@
                 "Daniela G.": false,
                 "Katia B.": true,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "09 Ven": {
                 "Gurpal S.": false,
@@ -641,7 +680,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "10 Sab": {
                 "Gurpal S.": false,
@@ -657,7 +697,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "11 Dom": {
                 "Gurpal S.": false,
@@ -673,7 +714,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "12 Lun": {
                 "Gurpal S.": false,
@@ -689,7 +731,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "13 Mar": {
                 "Gurpal S.": false,
@@ -705,7 +748,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "14 Mer": {
                 "Gurpal S.": false,
@@ -721,7 +765,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "15 Gio": {
                 "Gurpal S.": false,
@@ -737,7 +782,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "16 Ven": {
                 "Gurpal S.": false,
@@ -753,7 +799,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "17 Sab": {
                 "Gurpal S.": false,
@@ -769,7 +816,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "18 Dom": {
                 "Gurpal S.": false,
@@ -785,7 +833,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "19 Lun": {
                 "Gurpal S.": false,
@@ -801,7 +850,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "20 Mar": {
                 "Gurpal S.": false,
@@ -817,7 +867,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "21 Mer": {
                 "Gurpal S.": false,
@@ -833,7 +884,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "22 Gio": {
                 "Gurpal S.": false,
@@ -849,7 +901,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "23 Ven": {
                 "Gurpal S.": false,
@@ -865,7 +918,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "24 Sab": {
                 "Gurpal S.": false,
@@ -881,7 +935,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "25 Dom": {
                 "Gurpal S.": false,
@@ -897,7 +952,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "26 Lun": {
                 "Gurpal S.": false,
@@ -913,7 +969,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "27 Mar": {
                 "Gurpal S.": false,
@@ -929,7 +986,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "28 Mer": {
                 "Gurpal S.": false,
@@ -945,7 +1003,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "29 Gio": {
                 "Gurpal S.": false,
@@ -961,7 +1020,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "30 Ven": {
                 "Gurpal S.": false,
@@ -977,7 +1037,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "31 Sab": {
                 "Gurpal S.": false,
@@ -993,7 +1054,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             }
         },
         "p_pom": {
@@ -1011,7 +1073,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "02 Ven": {
                 "Gurpal S.": false,
@@ -1027,7 +1090,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "03 Sab": {
                 "Gurpal S.": false,
@@ -1043,7 +1107,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "04 Dom": {
                 "Gurpal S.": false,
@@ -1059,7 +1124,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "05 Lun": {
                 "Gurpal S.": false,
@@ -1075,7 +1141,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "06 Mar": {
                 "Gurpal S.": false,
@@ -1091,7 +1158,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "07 Mer": {
                 "Gurpal S.": false,
@@ -1107,7 +1175,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "08 Gio": {
                 "Gurpal S.": false,
@@ -1123,7 +1192,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "09 Ven": {
                 "Gurpal S.": false,
@@ -1139,7 +1209,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "10 Sab": {
                 "Gurpal S.": false,
@@ -1155,7 +1226,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "11 Dom": {
                 "Gurpal S.": false,
@@ -1171,7 +1243,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "12 Lun": {
                 "Gurpal S.": false,
@@ -1187,7 +1260,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "13 Mar": {
                 "Gurpal S.": false,
@@ -1203,7 +1277,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "14 Mer": {
                 "Gurpal S.": false,
@@ -1219,7 +1294,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "15 Gio": {
                 "Gurpal S.": false,
@@ -1235,7 +1311,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "16 Ven": {
                 "Gurpal S.": false,
@@ -1251,7 +1328,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "17 Sab": {
                 "Gurpal S.": false,
@@ -1267,7 +1345,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "18 Dom": {
                 "Gurpal S.": false,
@@ -1283,7 +1362,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "19 Lun": {
                 "Gurpal S.": false,
@@ -1299,7 +1379,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "20 Mar": {
                 "Gurpal S.": false,
@@ -1315,7 +1396,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "21 Mer": {
                 "Gurpal S.": false,
@@ -1331,7 +1413,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "22 Gio": {
                 "Gurpal S.": false,
@@ -1347,7 +1430,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "23 Ven": {
                 "Gurpal S.": false,
@@ -1363,7 +1447,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "24 Sab": {
                 "Gurpal S.": false,
@@ -1379,7 +1464,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "25 Dom": {
                 "Gurpal S.": false,
@@ -1395,7 +1481,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "26 Lun": {
                 "Gurpal S.": false,
@@ -1411,7 +1498,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "27 Mar": {
                 "Gurpal S.": false,
@@ -1427,7 +1515,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "28 Mer": {
                 "Gurpal S.": false,
@@ -1443,7 +1532,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "29 Gio": {
                 "Gurpal S.": false,
@@ -1459,7 +1549,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "30 Ven": {
                 "Gurpal S.": false,
@@ -1475,7 +1566,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             },
             "31 Sab": {
                 "Gurpal S.": false,
@@ -1491,7 +1583,8 @@
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
-                "Maria S.": false
+                "Maria S.": false,
+                "Pietro P.": false
             }
         }
     }
