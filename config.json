@@ -25,7 +25,7 @@
             ]
         },
         "FIRMA": {
-            "color": "#ffb74f",
+            "color": "#fff2ac",
             "tasks": [
                 "cc.firma",
                 "PECMAN/SDO (Firma)"
