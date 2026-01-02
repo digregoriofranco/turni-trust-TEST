@@ -177,31 +177,66 @@ with tab_settings:
             CONFIG["OPERATORS"] = [x.strip() for x in new_ops.split("\n") if x.strip()]
             save_state()
 
-    # MATRICE
-    with st.expander("🛠️ 3. Matrice Competenze", expanded=False):
-        all_cols = []
-        for s_name, s_data in CONFIG["SERVICES"].items():
-            for t in s_data["tasks"]:
-                all_cols.append(f"{s_name}: {t}")
+    # 3. MATRICE SKILL (FILTRATA PER SERVIZIO)
+    with st.expander("🛠️ 3. Matrice Competenze (Filtrata)", expanded=False):
+        st.info("Seleziona un servizio per modificare le competenze dei relativi task.")
         
-        rows = []
-        for op in CONFIG["OPERATORS"]:
-            op_skills = CONFIG["SKILLS"].get(op, [])
-            row = {"Operatore": op}
-            for col in all_cols:
-                row[col] = col in op_skills
-            rows.append(row)
+        # 1. MENU A TENDINA PER SCEGLIERE IL SERVIZIO
+        service_names = list(CONFIG["SERVICES"].keys())
+        if not service_names:
+            st.warning("Nessun servizio configurato.")
+        else:
+            selected_svc = st.selectbox("Filtra per Servizio:", service_names)
             
-        df_sk = pd.DataFrame(rows)
-        if not df_sk.empty:
-            df_sk.set_index("Operatore", inplace=True)
-            ed_df = st.data_editor(df_sk, use_container_width=True)
-            if st.button("💾 Salva Competenze"):
-                new_skills = {}
-                for op, r in ed_df.iterrows():
-                    new_skills[op] = [c for c in all_cols if r[c]]
-                CONFIG["SKILLS"] = new_skills
-                save_state()
+            # 2. RECUPERA SOLO I TASK DI QUEL SERVIZIO
+            # Costruiamo i nomi completi (es. "FATTURAZIONE: PECMAN")
+            tasks_of_service = CONFIG["SERVICES"][selected_svc]["tasks"]
+            cols_to_show = [f"{selected_svc}: {t}" for t in tasks_of_service]
+            
+            if not cols_to_show:
+                st.warning(f"Il servizio {selected_svc} non ha task configurati.")
+            else:
+                # 3. COSTRUISCI IL DATAFRAME FILTRATO
+                rows = []
+                for op in CONFIG["OPERATORS"]:
+                    # Prendo le skill attuali dell'operatore
+                    current_skills = CONFIG["SKILLS"].get(op, [])
+                    row = {"Operatore": op}
+                    
+                    # Riempio le colonne (True/False) solo per i task visualizzati
+                    for col in cols_to_show:
+                        row[col] = col in current_skills
+                    rows.append(row)
+                
+                df_filtered = pd.DataFrame(rows)
+                df_filtered.set_index("Operatore", inplace=True)
+                
+                # 4. EDITOR INTERATTIVO
+                edited_df = st.data_editor(
+                    df_filtered, 
+                    use_container_width=True, 
+                    height=400,
+                    key=f"editor_{selected_svc}" # Chiave unica per evitare conflitti
+                )
+                
+                # 5. SALVATAGGIO INTELLIGENTE
+                if st.button(f"💾 Salva Competenze ({selected_svc})"):
+                    # Per ogni operatore, aggiorniamo SOLO le skill di questo servizio
+                    for op, row in edited_df.iterrows():
+                        # 1. Prendi tutte le skill che ha attualmente
+                        old_skills = CONFIG["SKILLS"].get(op, [])
+                        
+                        # 2. Rimuovi da quella lista TUTTE le skill del servizio che stiamo modificando
+                        # (Così puliamo il vecchio stato per questo servizio specifico)
+                        skills_others = [s for s in old_skills if not s.startswith(f"{selected_svc}:")]
+                        
+                        # 3. Raccogli le nuove skill spuntate nella tabella
+                        new_service_skills = [col for col in cols_to_show if row[col]]
+                        
+                        # 4. Unisci: Skill degli altri servizi + Nuove skill di questo servizio
+                        CONFIG["SKILLS"][op] = skills_others + new_service_skills
+                    
+                    save_state()
 
     # TELEFONI E PAUSE
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
@@ -333,3 +368,4 @@ with tab_gen:
             
         st.dataframe(res.style.applymap(styler), use_container_width=True)
         if missing: st.warning("Task scoperti:"); st.json(missing)
+
