@@ -32,7 +32,7 @@
             ]
         },
         "SPID": {
-            "color": "#549ff5",
+            "color": "#c2daf9",
             "tasks": [
                 "cc.spid",
                 "PECMAN/SDO (SPID)"
