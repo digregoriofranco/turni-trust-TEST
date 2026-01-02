@@ -7,7 +7,6 @@ import copy
 from datetime import date
 import holidays
 from github import Github, GithubException
-import re
 
 st.set_page_config(page_title="Turni Trust Pro - Cloud", layout="wide")
 st.title("☁️ Turni Trust - Cloud Connected")
@@ -82,7 +81,6 @@ def save_file_to_github(filename, content, sha):
 # ==============================================================================
 
 if 'config' not in st.session_state:
-    # Configurazione
     cfg_data, cfg_sha = get_file_from_github("config.json")
     if cfg_data and "SERVICES" in cfg_data:
         st.session_state.config = cfg_data
@@ -91,12 +89,10 @@ if 'config' not in st.session_state:
         st.error("Errore critico: config.json mancante o struttura errata.")
         st.stop()
     
-    # Assenze (Leaves)
     leaves_data, leaves_sha = get_file_from_github("leaves.json")
     st.session_state.leaves = leaves_data if leaves_data else {}
     st.session_state.leaves_sha = leaves_sha
 
-    # Turni Salvati (Shifts)
     shifts_data, shifts_sha = get_file_from_github("shifts.json")
     st.session_state.shifts = shifts_data if shifts_data else {}
     st.session_state.shifts_sha = shifts_sha
@@ -106,7 +102,89 @@ if 'config' not in st.session_state:
 CONFIG = st.session_state.config
 
 # ==============================================================================
-# 3. INTERFACCIA
+# 3. UTILS DI VISUALIZZAZIONE
+# ==============================================================================
+
+def get_style_map():
+    col_map = {}
+    for s, d in CONFIG["SERVICES"].items():
+        for t in d["tasks"]:
+            col_map[f"{s}: {t}"] = d["color"]
+    return col_map
+
+def styler(v, col_map):
+    s = str(v)
+    if "FERIE" in s: return "background-color: #ffc4c4"
+    if "P." in s: return "background-color: #ffd966"
+    if "🎉" in s: return "background-color: #f4cccc"
+    for t, c in col_map.items():
+        if t in s: return f"background-color: {c}"
+    return ""
+
+def display_weeks(df_month, col_map, month_name, year):
+    """Funzione che prende il DF mensile, lo spezza in settimane e crea i download"""
+    
+    # 1. Suddivisione in Settimane
+    weeks_list = []
+    current_week_cols = []
+    for col in df_month.columns:
+        if "Lun" in col and current_week_cols: 
+            weeks_list.append(df_month[current_week_cols])
+            current_week_cols = []
+        current_week_cols.append(col)
+    if current_week_cols: 
+        weeks_list.append(df_month[current_week_cols])
+
+    # 2. Iterazione e Display
+    for i, w_df in enumerate(weeks_list):
+        week_num = i + 1
+        st.markdown(f"### 📅 Settimana {week_num}")
+        
+        # Visualizza tabella colorata
+        st.dataframe(w_df.style.applymap(lambda x: styler(x, col_map)), use_container_width=True)
+        
+        c1, c2 = st.columns(2)
+        
+        # DOWNLOAD CSV (Settimanale)
+        csv_data = w_df.to_csv(sep=";").encode("utf-8")
+        c1.download_button(
+            label=f"📥 Scarica CSV (Settimana {week_num})",
+            data=csv_data,
+            file_name=f"Turni_{month_name}_{year}_Week{week_num}.csv",
+            mime="text/csv",
+            key=f"dl_csv_{month_name}_{week_num}_{random.randint(0,9999)}"
+        )
+        
+        # DOWNLOAD HTML (Settimanale)
+        html_table = w_df.style.applymap(lambda x: styler(x, col_map)).to_html()
+        html_full = f"""
+        <html>
+        <head>
+            <style>
+                table {{ border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: center; }}
+                th {{ background-color: #f2f2f2; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+            </style>
+        </head>
+        <body>
+            <h3>Turni {month_name} {year} - Settimana {week_num}</h3>
+            {html_table}
+        </body>
+        </html>
+        """
+        c2.download_button(
+            label=f"📥 Scarica HTML (Settimana {week_num})",
+            data=html_full,
+            file_name=f"Turni_{month_name}_{year}_Week{week_num}.html",
+            mime="text/html",
+            key=f"dl_html_{month_name}_{week_num}_{random.randint(0,9999)}"
+        )
+        
+        st.markdown("---")
+
+# ==============================================================================
+# 4. INTERFACCIA PRINCIPALE
 # ==============================================================================
 
 tab_gen, tab_settings = st.tabs(["🗓️ GENERAZIONE TURNI", "⚙️ IMPOSTAZIONI"])
@@ -120,7 +198,6 @@ with tab_settings:
     # 1. SERVIZI
     with st.expander("🎨 1. Servizi e Colori", expanded=True):
         services = CONFIG["SERVICES"]
-        
         st.markdown("#### ➕ Crea Nuovo Servizio")
         with st.container(border=True):
             c1, c2 = st.columns([3, 1])
@@ -133,14 +210,11 @@ with tab_settings:
         
         st.divider()
         st.markdown("#### ✏️ Modifica Servizi")
-
         for s_name, s_data in services.items():
             c_col, c_name, c_del = st.columns([0.5, 3, 1])
             new_color = c_col.color_picker(f"Colore {s_name}", s_data["color"], key=f"c_{s_name}")
             c_name.markdown(f"**{s_name}**")
-            
-            if new_color != s_data["color"]:
-                s_data["color"] = new_color
+            if new_color != s_data["color"]: s_data["color"] = new_color
             
             tasks_str = "\n".join(s_data["tasks"])
             new_tasks = st.text_area(f"Task {s_name}", value=tasks_str, height=100, key=f"t_{s_name}")
@@ -150,7 +224,6 @@ with tab_settings:
                 s_data["tasks"] = [t.strip() for t in new_tasks.split("\n") if t.strip()]
                 save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
                 st.rerun()
-            
             if c_del.button("🗑️ Elimina", key=f"del_{s_name}"):
                 del services[s_name]
                 save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
@@ -277,34 +350,25 @@ with tab_gen:
     st.divider()
 
     # 2. LOGICA TURNI (RIPARAZIONE vs GENERAZIONE)
-    
-    # Verifica se esistono turni già salvati per questo mese
     saved_shifts_for_month = st.session_state.shifts.get(LEAVES_KEY, None)
-    
-    # Checkbox per "Smart Update" (Attivo solo se ci sono dati)
     smart_update = False
     if saved_shifts_for_month:
         st.info("Trovati turni salvati per questo mese.")
-        smart_update = st.checkbox("🔄 Preserva turni salvati (Assegna solo scoperti)", value=True, help="Se attivo, mantiene i turni degli operatori presenti e riassegna solo quelli degli assenti.")
+        smart_update = st.checkbox("🔄 Preserva turni salvati (Assegna solo scoperti)", value=True)
 
     if st.button("🚀 CALCOLA TURNI", type="primary"):
         out = {}
         missing = {}
         cnt = {op: {} for op in ops}
         
-        # Mappa colori e task
         all_tasks = []
-        col_map = {}
         for s, d in CONFIG["SERVICES"].items():
             for t in d["tasks"]:
-                full = f"{s}: {t}"
-                all_tasks.append(full)
-                col_map[full] = d["color"]
+                all_tasks.append(f"{s}: {t}")
         
         def scarcity(t): return sum(1 for op in ops if t in CONFIG["SKILLS"].get(op, []))
         all_tasks.sort(key=scarcity)
         
-        # Memoria per rotazione
         weekly_assignments = {} 
         last_week_assignments = {} 
         weekly_lunches = {}
@@ -312,28 +376,19 @@ with tab_gen:
         
         for i, col in enumerate(cols):
             d_obj = days[i]
-            
-            # Reset Settimanale (Lunedì)
             if d_obj.weekday() == 0:
                 last_week_assignments = copy.deepcopy(weekly_assignments)
                 weekly_assignments = {}
                 weekly_lunches = {}
                 current_week_idx += 1
 
-            # --- SETUP GIORNALIERO ---
-            # Weekend -> Vuoto
             if d_obj.weekday() >= 5: 
-                out[col] = {op: "" for op in ops}
-                continue
-            # Festivo -> Visibile
+                out[col] = {op: "" for op in ops}; continue
             if d_obj in hols: 
-                out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
-                continue
+                out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}; continue
 
             day_ass = {op: "" for op in ops}
             available_ops = []
-            
-            # Calcolo Disponibilità Odierna
             for op in ops:
                 if in_ferie.at[op, col]: day_ass[op] = "FERIE"
                 elif in_pm.at[op, col]: day_ass[op] = "P.MATT"; available_ops.append(op)
@@ -341,63 +396,43 @@ with tab_gen:
                 else: available_ops.append(op)
             
             if not available_ops:
-                out[col] = day_ass
-                continue
+                out[col] = day_ass; continue
 
-            # --- LOGICA SMART UPDATE VS FRESH ---
             tasks_to_assign = copy.deepcopy(all_tasks)
             assigned_this_day = []
             
-            # Se siamo in Smart Update, recuperiamo i dati salvati
+            # SMART UPDATE LOGIC
             if smart_update and saved_shifts_for_month and col in saved_shifts_for_month:
                 saved_day = saved_shifts_for_month[col]
-                
-                # Cerca di mantenere i turni salvati se l'operatore è disponibile
                 for op in available_ops:
                     if op in saved_day:
-                        prev_task_str = saved_day[op]
-                        
-                        # Verifica grezza: se il task salvato contiene uno dei task che dobbiamo assegnare
-                        # Lo consideriamo "coperto"
-                        found_tasks = []
-                        for t in tasks_to_assign:
-                            if t in prev_task_str:
-                                found_tasks.append(t)
-                        
+                        prev = saved_day[op]
+                        found_tasks = [t for t in tasks_to_assign if t in prev]
                         if found_tasks:
-                            # MANTENIAMO IL TURNO
-                            day_ass[op] = prev_task_str
+                            day_ass[op] = prev
                             assigned_this_day.append(op)
-                            # Rimuoviamo i task coperti dal pool da assegnare
-                            for ft in found_tasks:
+                            for ft in found_tasks: 
                                 if ft in tasks_to_assign: tasks_to_assign.remove(ft)
-                                
-                            # Se è Lunedì, aggiorniamo la memoria settimanale per coerenza
                             if d_obj.weekday() == 0:
                                 if op not in weekly_assignments: weekly_assignments[op] = []
                                 weekly_assignments[op].extend(found_tasks)
 
-            # --- ASSEGNAZIONE STANDARD (Per task orfani o nuovi) ---
-            
-            # 1. Sticky Week (Se non già assegnato dallo Smart Update)
+            # STANDARD ASSIGNMENT
+            # Sticky Week
             for op in available_ops:
                 if op not in assigned_this_day and op in weekly_assignments:
                     my_weekly = weekly_assignments[op]
-                    confirmed = []
-                    for t in my_weekly:
-                        if t in tasks_to_assign:
-                            confirmed.append(t)
-                            tasks_to_assign.remove(t)
+                    confirmed = [t for t in my_weekly if t in tasks_to_assign]
+                    for t in confirmed: tasks_to_assign.remove(t)
                     
                     if confirmed:
                         t_str = " + ".join(confirmed)
                         prefix = f"({day_ass[op]}) " if "P." in day_ass[op] else ""
                         if day_ass[op] and "P." not in day_ass[op]: day_ass[op] += " + " + t_str
                         else: day_ass[op] = prefix + t_str
-                        cnt[op][t] = cnt[op].get(t, 0) + 1
                         assigned_this_day.append(op)
 
-            # 2. Nuovi Task
+            # New Tasks
             def load(op):
                 if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
                 if op in assigned_this_day: return day_ass[op].count('+') + 1
@@ -421,67 +456,49 @@ with tab_gen:
                 chosen = None
                 for op in cands:
                     if load(op) < max_tasks: chosen = op; break
-                
                 if not chosen: 
                     for op in cands:
                         if day_ass[op] not in ["FERIE"]: chosen = op; break
                 
                 if chosen:
                     prefix = f"({day_ass[chosen]}) " if "P." in day_ass[chosen] else ""
-                    if day_ass[chosen] and "P." not in day_ass[chosen]: 
-                        day_ass[chosen] += f" + {t}"
-                    else: 
-                        day_ass[chosen] = prefix + t
-                    
+                    if day_ass[chosen] and "P." not in day_ass[chosen]: day_ass[chosen] += f" + {t}"
+                    else: day_ass[chosen] = prefix + t
                     cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
                     assigned_this_day.append(chosen)
-                    
                     if d_obj.weekday() == 0:
                         if chosen not in weekly_assignments: weekly_assignments[chosen] = []
                         weekly_assignments[chosen].append(t)
 
-            # --- PAUSE (Se non già fissate dallo Smart Update) ---
-            # Se lo Smart Update ha copiato la cella intera, la pausa c'è già.
-            # Dobbiamo aggiungerla solo se manca "☕" nella stringa.
-            
+            # PAUSE
             base_slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
             if base_slots:
                 rotate_idx = current_week_idx % len(base_slots)
                 rotated_slots = base_slots[rotate_idx:] + base_slots[:rotate_idx]
             else:
                 rotated_slots = []
-
             s_i = 0
             for op in available_ops:
-                # Controlla se la pausa è già presente (dal salvataggio precedente)
                 has_pause = "☕" in day_ass[op]
-                
                 if not has_pause and "P." not in day_ass[op] and "FERIE" not in day_ass[op]:
                     p_time = None
-                    if op in CONFIG["PAUSE"]["FISSI"]:
-                        p_time = CONFIG["PAUSE"]["FISSI"][op]
-                    elif op in weekly_lunches:
-                        p_time = weekly_lunches[op]
+                    if op in CONFIG["PAUSE"]["FISSI"]: p_time = CONFIG["PAUSE"]["FISSI"][op]
+                    elif op in weekly_lunches: p_time = weekly_lunches[op]
                     elif rotated_slots:
-                        p_time = rotated_slots[s_i % len(rotated_slots)]
-                        s_i += 1
-                        if d_obj.weekday() == 0:
-                            weekly_lunches[op] = p_time
-                    
+                        p_time = rotated_slots[s_i % len(rotated_slots)]; s_i += 1
+                        if d_obj.weekday() == 0: weekly_lunches[op] = p_time
                     if p_time: day_ass[op] += f"\n☕ {p_time}"
             
             out[col] = day_ass
             
-        # FINE GENERAZIONE
-        
-        # SALVATAGGIO AUTOMATICO SU SHIFTS.JSON
+        # SALVATAGGIO
         st.session_state.shifts[LEAVES_KEY] = out
         res, new_sha = save_file_to_github("shifts.json", st.session_state.shifts, st.session_state.shifts_sha)
         if res:
              st.session_state.shifts_sha = new_sha
-             st.toast("Turni salvati automaticamente in Cloud!", icon="💾")
+             st.toast("Turni salvati!", icon="💾")
 
-        # VISUALIZZAZIONE
+        # VISUALIZZAZIONE (Settimanale)
         res_df = pd.DataFrame(out)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
         final_view = res_df[cols_to_show]
@@ -491,81 +508,21 @@ with tab_gen:
             t = CONFIG["TELEFONI"].get(op)
             new_idx.append(f"{op} (☎️ {t})" if t else op)
         final_view.index = new_idx
-
-        def styler(v):
-            s = str(v)
-            if "FERIE" in s: return "background-color: #ffc4c4"
-            if "P." in s: return "background-color: #ffd966"
-            if "🎉" in s: return "background-color: #f4cccc"
-            for t, c in col_map.items():
-                if t in s: return f"background-color: {c}"
-            return ""
-
-        st.success("Turni Generati e Salvati!")
         
-        weeks = []
-        cw = []
-        for c in final_view.columns:
-            if "Lun" in c and cw: weeks.append(cw); cw = []
-            cw.append(c)
-        if cw: weeks.append(cw)
-
-        for i, w in enumerate(weeks):
-            st.markdown(f"### 📅 Settimana {i+1}")
-            st.dataframe(final_view[w].style.applymap(styler), use_container_width=True)
-            with st.expander(f"Copia Settimana {i+1}"):
-                st.code(final_view[w].to_csv(sep='\t'), language='text')
-            st.markdown("---")
-
+        st.success("Turni Generati!")
         if missing: st.warning("Non assegnati:"); st.json(missing)
         
-        st.download_button(
-            label="Scarica CSV",
-            data=final_view.to_csv(sep=";").encode("utf-8"),
-            file_name=f"Turni_{mese_s}.csv",
-            mime="text/csv"
-        )
+        # DISPLAY A BLOCCHI SETTIMANALI
+        display_weeks(final_view, get_style_map(), mese_s, anno_s)
 
-        html_content = final_view.style.applymap(styler).to_html()
-        html_structure = f"""
-        <html>
-        <head>
-            <style>
-                table {{ border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }}
-                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: center; }}
-                th {{ background-color: #f2f2f2; }}
-                tr:nth-child(even) {{ background-color: #f9f9f9; }}
-            </style>
-        </head>
-        <body>
-            <h2>Turni {mese_s} {anno_s}</h2>
-            {html_content}
-        </body>
-        </html>
-        """
-        st.download_button(
-            label="Scarica Tabella HTML (Colorata)",
-            data=html_structure,
-            file_name=f"Turni_{mese_s}.html",
-            mime="text/html"
-        )
-
-    # 3. VISUALIZZAZIONE TURNI SALVATI (SE ESISTONO E NON ABBIAMO APPENA GENERATO)
-    # Questo blocco serve per vedere i turni appena si apre l'app, senza dover rigenerare
-    if saved_shifts_for_month and "final_view" not in locals(): # Mostra solo se non abbiamo appena calcolato
+    # 3. VISUALIZZAZIONE TURNI SALVATI
+    if saved_shifts_for_month and "final_view" not in locals():
         st.divider()
         st.subheader(f"📂 Turni Salvati: {mese_s} {anno_s}")
         
-        # Ricostruzione DataFrame da JSON salvato
-        # (Codice duplicato per visualizzazione statica)
-        col_map_viz = {}
-        for s, d in CONFIG["SERVICES"].items():
-            for t in d["tasks"]:
-                col_map_viz[f"{s}: {t}"] = d["color"]
-                
         saved_df = pd.DataFrame(saved_shifts_for_month)
-        # Filtri e Index identici
-        cols_viz = [c for c in saved_df.columns if "Sab" not in c and "Dom" not in c] # Filtro grezzo stringa per semplicità visuale
+        # Filtro sab/dom
+        cols_viz = [c for c in saved_df.columns if "Sab" not in c and "Dom" not in c] 
         saved_view = saved_df[cols_viz]
         
         new_idx_viz = []
@@ -574,13 +531,5 @@ with tab_gen:
             new_idx_viz.append(f"{op} (☎️ {t})" if t else op)
         saved_view.index = new_idx_viz
 
-        def styler_viz(v):
-            s = str(v)
-            if "FERIE" in s: return "background-color: #ffc4c4"
-            if "P." in s: return "background-color: #ffd966"
-            if "🎉" in s: return "background-color: #f4cccc"
-            for t, c in col_map_viz.items():
-                if t in s: return f"background-color: {c}"
-            return ""
-
-        st.dataframe(saved_view.style.applymap(styler_viz), use_container_width=True)
+        # Visualizzazione esplosa per settimane anche per i salvati
+        display_weeks(saved_view, get_style_map(), mese_s, anno_s)
