@@ -1,0 +1,229 @@
+{
+    "OPERATORS": [
+        "Gurpal S.",
+        "Nicola T.",
+        "Paolo G.",
+        "Lorenzo T.",
+        "Andrea V.",
+        "Federico P.",
+        "Erica B.",
+        "Daniela C.",
+        "Francesca F.",
+        "Lorenza V.",
+        "Daniela G.",
+        "Katia B.",
+        "Caterina B.",
+        "Maria S."
+    ],
+    "SERVICES_SCHEMA": {
+        "FATTURAZIONE": [
+            "cc.fatturazione",
+            "SDO",
+            "PECMAN"
+        ],
+        "FIRMA": [
+            "cc.firma",
+            "PECMAN/SDO (Firma)"
+        ],
+        "SPID": [
+            "cc.spid",
+            "PECMAN/SDO (SPID)"
+        ],
+        "PEC": [
+            "reparto.pec",
+            "Caselle attesa attivazione",
+            "PECMAN/SDO escalation",
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ]
+    },
+    "OPERATOR_SKILLS": {
+        "Gurpal S.": [
+            "cc.fatturazione",
+            "SDO",
+            "PECMAN"
+        ],
+        "Nicola T.": [
+            "PECMAN/SDO (SPID)",
+            "cc.spid",
+            "reparto.pec",
+            "Caselle attesa attivazione",
+            "PECMAN/SDO escalation"
+        ],
+        "Paolo G.": [
+            "reparto.pec",
+            "Caselle attesa attivazione",
+            "PECMAN/SDO escalation"
+        ],
+        "Lorenzo T.": [
+            "reparto.pec",
+            "Caselle attesa attivazione",
+            "PECMAN/SDO escalation"
+        ],
+        "Andrea V.": [
+            "cc.firma",
+            "PECMAN/SDO (Firma)"
+        ],
+        "Federico P.": [
+            "cc.firma",
+            "PECMAN/SDO (Firma)",
+            "reparto.pec",
+            "Caselle attesa attivazione",
+            "PECMAN/SDO escalation"
+        ],
+        "Erica B.": [
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ],
+        "Daniela C.": [
+            "SDO",
+            "PECMAN",
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ],
+        "Francesca F.": [
+            "SDO",
+            "PECMAN",
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ],
+        "Lorenza V.": [
+            "SDO",
+            "PECMAN",
+            "PECMAN/SDO (SPID)",
+            "cc.spid"
+        ],
+        "Daniela G.": [
+            "PECMAN/SDO (SPID)",
+            "cc.spid",
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ],
+        "Katia B.": [
+            "cc.fatturazione",
+            "SDO",
+            "PECMAN",
+            "Caselle Occupate",
+            "PECMAN/SDO MATTINA",
+            "PECMAN/SDO POMERIGGIO"
+        ],
+        "Caterina B.": [
+            "cc.fatturazione",
+            "SDO",
+            "PECMAN"
+        ],
+        "Maria S.": []
+    },
+    "TURNI_TELEFONO_FISSI": {
+        "Gurpal S.": "11:00 - 12:00",
+        "Nicola T.": "11:00 - 12:00",
+        "Paolo G.": "12:00 - 13:00",
+        "Lorenzo T.": "09:00 - 10:00",
+        "Andrea V.": "10:00 - 11:00",
+        "Federico P.": "11:00 - 12:00",
+        "Erica B.": "10:00 - 11:00",
+        "Daniela C.": "15:00 - 16:00",
+        "Francesca F.": "10:00 - 11:00",
+        "Katia B.": "10:00 - 11:00"
+    },
+    "PAUSE_PRANZO": {
+        "FISSI": {
+            "Nicola T.": "13:00 - 14:30",
+            "Paolo G.": "13:30 - 15:00",
+            "Lorenzo T.": "13:00 - 14:30",
+            "Andrea V.": "13:00 - 14:30",
+            "Federico P.": "13:00 - 14:30",
+            "Erica B.": "13:00 - 14:30",
+            "Daniela C.": "13:30 - 15:00",
+            "Francesca F.": "13:00 - 14:30",
+            "Lorenza V.": "13:00 - 14:30",
+            "Daniela G.": "13:00 - 14:30",
+            "Caterina B.": "13:00 - 14:30",
+            "Maria S.": "13:00 - 14:30"
+        },
+        "SLOT_ROTAZIONE": [
+            "12:30 - 14:00",
+            "13:00 - 14:30",
+            "13:30 - 15:00"
+        ]
+    },
+    "GIORNATA_TIPO": [
+        {
+            "nome": "FATTURAZIONE: cc.fatturazione",
+            "skill_richiesta": "cc.fatturazione",
+            "qty": 1,
+            "colore": "#4FFF81"
+        },
+        {
+            "nome": "FATTURAZIONE: SDO",
+            "skill_richiesta": "SDO",
+            "qty": 1,
+            "colore": "#4FFF81"
+        },
+        {
+            "nome": "FATTURAZIONE: PECMAN",
+            "skill_richiesta": "PECMAN",
+            "qty": 1,
+            "colore": "#4FFF81"
+        },
+        {
+            "nome": "FIRMA: PECMAN/SDO",
+            "skill_richiesta": "PECMAN/SDO (Firma)",
+            "qty": 1,
+            "colore": "#ffb74f"
+        },
+        {
+            "nome": "FIRMA: cc.firma",
+            "skill_richiesta": "cc.firma",
+            "qty": 1,
+            "colore": "#ffb74f"
+        },
+        {
+            "nome": "SPID: cc.spid",
+            "skill_richiesta": "cc.spid",
+            "qty": 1,
+            "colore": "#549ff5"
+        },
+        {
+            "nome": "SPID: PECMAN/SDO",
+            "skill_richiesta": "PECMAN/SDO (SPID)",
+            "qty": 1,
+            "colore": "#549ff5"
+        },
+        {
+            "nome": "PEC: reparto.tecnico",
+            "skill_richiesta": "reparto.pec",
+            "qty": 1,
+            "colore": "#FF5353"
+        },
+        {
+            "nome": "PEC: Escalation SDO/PECMAN",
+            "skill_richiesta": "PECMAN/SDO escalation",
+            "qty": 1,
+            "colore": "#FF5353"
+        },
+        {
+            "nome": "PEC: Caselle Occupate",
+            "skill_richiesta": "Caselle Occupate",
+            "qty": 1,
+            "colore": "#FF9696"
+        },
+        {
+            "nome": "PEC: PECMAN Mattina",
+            "skill_richiesta": "PECMAN/SDO MATTINA",
+            "qty": 1,
+            "colore": "#FF9696"
+        },
+        {
+            "nome": "PEC: PECMAN Pomeriggio",
+            "skill_richiesta": "PECMAN/SDO POMERIGGIO",
+            "qty": 1,
+            "colore": "#FF9696"
+        }
+    ]
+}
