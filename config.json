@@ -17,7 +17,7 @@
     ],
     "SERVICES": {
         "FATTURAZIONE": {
-            "color": "#4FFF81",
+            "color": "#ccffda",
             "tasks": [
                 "cc.fatturazione",
                 "SDO",
