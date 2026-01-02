@@ -39,7 +39,7 @@
             ]
         },
         "PEC": {
-            "color": "#FF5353",
+            "color": "#ffb3b3",
             "tasks": [
                 "reparto.pec",
                 "Caselle attesa attivazione",
