@@ -140,7 +140,9 @@ def display_weeks(df_month, col_map, month_name, year):
         week_num = i + 1
         st.markdown(f"### 📅 Settimana {week_num}")
         
-        # Visualizza tabella colorata
+        # Visualizza tabella colorata in Streamlit
+        # Nota: st.dataframe non supporta HTML arbitrario dentro le celle facilmente, 
+        # ma supporta i newlines (\n).
         st.dataframe(w_df.style.applymap(lambda x: styler(x, col_map)), use_container_width=True)
         
         c1, c2 = st.columns(2)
@@ -155,16 +157,24 @@ def display_weeks(df_month, col_map, month_name, year):
             key=f"dl_csv_{month_name}_{week_num}_{random.randint(0,9999)}"
         )
         
-        # DOWNLOAD HTML (Settimanale)
-        html_table = w_df.style.applymap(lambda x: styler(x, col_map)).to_html()
+        # DOWNLOAD HTML (Settimanale) - CORREZIONE A CAPO
+        # Convertiamo i \n in <br> per l'HTML
+        def html_formatter(val):
+            return str(val).replace("\n", "<br>")
+            
+        html_table = w_df.style.applymap(lambda x: styler(x, col_map)).format(html_formatter).to_html()
+        
         html_full = f"""
         <html>
         <head>
+            <meta charset="UTF-8">
             <style>
                 table {{ border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px; }}
-                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: center; }}
+                th, td {{ border: 1px solid #999; padding: 8px; text-align: center; vertical-align: top; }}
                 th {{ background-color: #f2f2f2; }}
                 tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                /* Questa regola forza l'a capo visivo */
+                td {{ white-space: pre-wrap; }} 
             </style>
         </head>
         <body>
@@ -349,7 +359,7 @@ with tab_gen:
 
     st.divider()
 
-    # 2. LOGICA TURNI (RIPARAZIONE vs GENERAZIONE)
+    # 2. LOGICA TURNI
     saved_shifts_for_month = st.session_state.shifts.get(LEAVES_KEY, None)
     smart_update = False
     if saved_shifts_for_month:
@@ -418,11 +428,25 @@ with tab_gen:
                                 weekly_assignments[op].extend(found_tasks)
 
             # STANDARD ASSIGNMENT
-            # Sticky Week
+            # Sticky Week con LIMITE (Load Shedding)
             for op in available_ops:
                 if op not in assigned_this_day and op in weekly_assignments:
                     my_weekly = weekly_assignments[op]
-                    confirmed = [t for t in my_weekly if t in tasks_to_assign]
+                    
+                    # ----------------------------------------------------
+                    # CORREZIONE "COLLO DI BOTTIGLIA DEL LUNEDI'"
+                    # Se anche l'operatore aveva 10 task assegnati il lunedì,
+                    # oggi ne assegniamo solo fino a 'max_tasks'.
+                    # I task in eccesso vengono rilasciati nel pool.
+                    # ----------------------------------------------------
+                    
+                    # Prendiamo i task validi (ancora da assegnare)
+                    valid_weekly = [t for t in my_weekly if t in tasks_to_assign]
+                    
+                    # Applichiamo il limite
+                    confirmed = valid_weekly[:max_tasks]
+                    
+                    # Rimuoviamo i confermati dal pool generale
                     for t in confirmed: tasks_to_assign.remove(t)
                     
                     if confirmed:
@@ -498,7 +522,7 @@ with tab_gen:
              st.session_state.shifts_sha = new_sha
              st.toast("Turni salvati!", icon="💾")
 
-        # VISUALIZZAZIONE (Settimanale)
+        # VISUALIZZAZIONE
         res_df = pd.DataFrame(out)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
         final_view = res_df[cols_to_show]
@@ -512,7 +536,6 @@ with tab_gen:
         st.success("Turni Generati!")
         if missing: st.warning("Non assegnati:"); st.json(missing)
         
-        # DISPLAY A BLOCCHI SETTIMANALI
         display_weeks(final_view, get_style_map(), mese_s, anno_s)
 
     # 3. VISUALIZZAZIONE TURNI SALVATI
@@ -531,5 +554,4 @@ with tab_gen:
             new_idx_viz.append(f"{op} (☎️ {t})" if t else op)
         saved_view.index = new_idx_viz
 
-        # Visualizzazione esplosa per settimane anche per i salvati
         display_weeks(saved_view, get_style_map(), mese_s, anno_s)
