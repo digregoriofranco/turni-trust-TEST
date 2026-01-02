@@ -337,4 +337,67 @@ with tab_gen:
                 
                 if chosen:
                     prefix = f"({day_ass[chosen]}) " if "P." in day_ass[chosen] else ""
-                    if day_ass[chosen] and "P." not in day_ass
+                    if day_ass[chosen] and "P." not in day_ass[chosen]: 
+                        day_ass[chosen] += f" + {t}"
+                    else: 
+                        day_ass[chosen] = prefix + t
+                    
+                    cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
+            
+            # Pause & Telefoni
+            slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
+            random.shuffle(slots)
+            s_i = 0
+            for op in avail:
+                if "P." not in day_ass[op]: 
+                    p = CONFIG["PAUSE"]["FISSI"].get(op)
+                    if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
+                    if p: day_ass[op] += f"\n☕ {p}"
+                    
+                tel = CONFIG["TELEFONI"].get(op)
+                if tel: day_ass[op] = f"☎️ {tel}\n" + day_ass[op]
+            
+            out[col] = day_ass
+            
+        res_df = pd.DataFrame(out)
+
+        # -----------------------------------------------------------
+        # FILTRO VISUALIZZAZIONE: RIMUOVI COLONNE SAB/DOM/FESTIVI
+        # -----------------------------------------------------------
+        # Creiamo una lista delle colonne da mostrare (solo Lun-Ven non festivi)
+        cols_to_show = [
+            c for i, c in enumerate(cols) 
+            if days[i].weekday() < 5  # No Sabato(5) o Domenica(6)
+        ]
+        
+        # Filtriamo il DataFrame finale
+        final_view_df = res_df[cols_to_show]
+
+        def styler(v):
+            s = str(v)
+            if "FERIE" in s: return "background-color: #ffc4c4" # ROSSO PASTELLO DELICATO
+            if "P." in s: return "background-color: #ffd966"
+            if "🎉" in s: return "background-color: #f4cccc"
+            for t, c in col_map.items():
+                if t in s: return f"background-color: {c}"
+            return ""
+
+        st.success("Turni Calcolati!")
+        
+        # VISTA SETTIMANALE (Basata sulle colonne filtrate)
+        weeks = []
+        curr_week = []
+        for col in final_view_df.columns:
+            if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
+            curr_week.append(col)
+        if curr_week: weeks.append(curr_week)
+
+        for i, w_cols in enumerate(weeks):
+            st.markdown(f"### 📅 Settimana {i+1}")
+            st.dataframe(final_view_df[w_cols].style.applymap(styler), use_container_width=True)
+            with st.expander(f"Copia Settimana {i+1}"):
+                st.code(final_view_df[w_cols].to_csv(sep='\t'), language='text')
+            st.markdown("---")
+
+        if missing: st.warning("Task scoperti:"); st.json(missing)
+        st.download_button("Scarica Mese Completo (Senza Weekend)", final_view_df.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
