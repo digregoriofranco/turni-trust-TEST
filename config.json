@@ -51,8 +51,11 @@
             ]
         },
         "Scontrina": {
-            "color": "#cccccc",
-            "tasks": []
+            "color": "#d9aaff",
+            "tasks": [
+                "Presidio Chat Mattina",
+                "Presidio Chat Pomeriggio"
+            ]
         }
     },
     "SKILLS": {
