@@ -299,7 +299,7 @@ with tab_gen:
     with c2:
         anno_s = st.number_input("Anno", 2024, 2030, 2026)
     with c3:
-        max_tasks = st.slider("Max Task Simultanei", 1, 6, 3)
+        max_tasks = st.slider("Max Task Simultanei", 1, 6, 2)
 
     LEAVES_KEY = f"{anno_s}_{mese_n}"
     _, nd = calendar.monthrange(anno_s, mese_n)
@@ -545,3 +545,4 @@ with tab_gen:
         saved_view.index = new_idx_viz
 
         display_weeks(saved_view, get_style_map(), mese_s, anno_s)
+
