@@ -13,7 +13,8 @@
         "Daniela G.",
         "Katia B.",
         "Caterina B.",
-        "Maria S."
+        "Maria S.",
+        "Pietro P."
     ],
     "SERVICES": {
         "FATTURAZIONE": {
@@ -129,7 +130,8 @@
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN"
         ],
-        "Maria S.": []
+        "Maria S.": [],
+        "Pietro P.": []
     },
     "PAUSE": {
         "FISSI": {
