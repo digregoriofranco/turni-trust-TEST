@@ -16,7 +16,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "02 Ven": {
                 "Gurpal S.": false,
@@ -33,7 +33,7 @@
                 "Katia B.": true,
                 "Caterina B.": false,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "03 Sab": {
                 "Gurpal S.": true,
@@ -50,7 +50,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "04 Dom": {
                 "Gurpal S.": true,
@@ -67,7 +67,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "05 Lun": {
                 "Gurpal S.": false,
@@ -84,7 +84,7 @@
                 "Katia B.": true,
                 "Caterina B.": false,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "06 Mar": {
                 "Gurpal S.": true,
@@ -101,7 +101,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "07 Mer": {
                 "Gurpal S.": false,
@@ -118,7 +118,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "08 Gio": {
                 "Gurpal S.": false,
@@ -135,7 +135,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "09 Ven": {
                 "Gurpal S.": false,
@@ -152,7 +152,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "10 Sab": {
                 "Gurpal S.": true,
@@ -169,7 +169,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "11 Dom": {
                 "Gurpal S.": true,
@@ -186,7 +186,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "12 Lun": {
                 "Gurpal S.": false,
@@ -203,7 +203,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "13 Mar": {
                 "Gurpal S.": false,
@@ -220,7 +220,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "14 Mer": {
                 "Gurpal S.": false,
@@ -237,7 +237,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "15 Gio": {
                 "Gurpal S.": false,
@@ -254,7 +254,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "16 Ven": {
                 "Gurpal S.": false,
@@ -271,7 +271,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "17 Sab": {
                 "Gurpal S.": true,
@@ -288,7 +288,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "18 Dom": {
                 "Gurpal S.": true,
@@ -305,7 +305,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "19 Lun": {
                 "Gurpal S.": false,
@@ -322,7 +322,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "20 Mar": {
                 "Gurpal S.": false,
@@ -339,7 +339,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "21 Mer": {
                 "Gurpal S.": false,
@@ -356,7 +356,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "22 Gio": {
                 "Gurpal S.": false,
@@ -373,7 +373,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "23 Ven": {
                 "Gurpal S.": false,
@@ -390,7 +390,7 @@
                 "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "24 Sab": {
                 "Gurpal S.": true,
@@ -407,7 +407,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "25 Dom": {
                 "Gurpal S.": true,
@@ -424,7 +424,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "26 Lun": {
                 "Gurpal S.": false,
@@ -441,7 +441,7 @@
                 "Katia B.": false,
                 "Caterina B.": true,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "27 Mar": {
                 "Gurpal S.": false,
@@ -458,7 +458,7 @@
                 "Katia B.": false,
                 "Caterina B.": true,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "28 Mer": {
                 "Gurpal S.": false,
@@ -475,7 +475,7 @@
                 "Katia B.": false,
                 "Caterina B.": true,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "29 Gio": {
                 "Gurpal S.": false,
@@ -492,7 +492,7 @@
                 "Katia B.": false,
                 "Caterina B.": true,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "30 Ven": {
                 "Gurpal S.": false,
@@ -509,7 +509,7 @@
                 "Katia B.": false,
                 "Caterina B.": true,
                 "Maria S.": false,
-                "Pietro P.": false
+                "Pietro P.": true
             },
             "31 Sab": {
                 "Gurpal S.": true,
@@ -526,7 +526,7 @@
                 "Katia B.": true,
                 "Caterina B.": true,
                 "Maria S.": true,
-                "Pietro P.": false
+                "Pietro P.": true
             }
         },
         "p_matt": {
