@@ -113,7 +113,6 @@ with tab_settings:
     with st.expander("🎨 1. Servizi e Colori", expanded=True):
         services = CONFIG["SERVICES"]
         
-        # Aggiungi
         st.markdown("#### ➕ Crea Nuovo Servizio")
         with st.container(border=True):
             c1, c2 = st.columns([3, 1])
@@ -224,7 +223,6 @@ with tab_gen:
     _, nd = calendar.monthrange(anno_s, mese_n)
     days = [date(anno_s, mese_n, x) for x in range(1, nd+1)]
     hols = holidays.IT(years=anno_s)
-    # Colonne totali (per input assenze)
     cols = [f"{d.day:02d} {['Lun','Mar','Mer','Gio','Ven','Sab','Dom'][d.weekday()]}" for d in days]
     ops = CONFIG["OPERATORS"]
     
@@ -271,12 +269,12 @@ with tab_gen:
     st.divider()
 
     # GENERAZIONE
-    if st.button("🚀 CALCOLA TURNI (SETTIMANALI)", type="primary"):
+    if st.button("🚀 CALCOLA TURNI (ROTATIVI)", type="primary"):
         out = {}
         missing = {}
         cnt = {op: {} for op in ops}
         
-        # Mappa colori e lista task completa
+        # Mappa colori e task
         all_tasks = []
         col_map = {}
         for s, d in CONFIG["SERVICES"].items():
@@ -288,34 +286,37 @@ with tab_gen:
         def scarcity(t): return sum(1 for op in ops if t in CONFIG["SKILLS"].get(op, []))
         all_tasks.sort(key=scarcity)
         
-        # MEMORIA SETTIMANALE ("Master Plan")
-        weekly_assignments = {} # {Op: [Task1, Task2]}
-        weekly_lunches = {}     # {Op: "13:00"}
+        # MEMORIA STORICA (Per rotazione)
+        weekly_assignments = {} # {Op: [Task]}
+        last_week_assignments = {} # {Op: [Task]} (Copia della settimana precedente)
+        weekly_lunches = {}
         
-        # Iterazione giorni
+        current_week_idx = 0 # Contatore settimane per rotazione pause
+        
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # Reset del piano settimanale se è Lunedì
+            # --- CAMBIO SETTIMANA (LUNEDÌ) ---
             if d_obj.weekday() == 0:
+                # 1. Archivia la settimana appena passata per evitare ripetizioni
+                last_week_assignments = copy.deepcopy(weekly_assignments)
+                # 2. Resetta assegnazioni correnti
                 weekly_assignments = {}
                 weekly_lunches = {}
+                # 3. Avanza contatore per rotazione pause
+                current_week_idx += 1
 
-            # --- 1. GESTIONE FESTIVI E WEEKEND ---
-            
-            # Se weekend -> Cella vuota e skip (Ma non visibile in output finale)
-            if d_obj.weekday() >= 5:
+            # --- GESTIONE FESTIVI E WEEKEND ---
+            if d_obj.weekday() >= 5: # Weekend -> Vuoto
                 out[col] = {op: "" for op in ops}
                 continue
-                
-            # Se festivo -> Mostra "Festivo" (colore rosa) e skip assegnazione
-            if d_obj in hols:
+            if d_obj in hols: # Festivo -> Visibile
                 out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
                 continue
 
-            # --- 2. PREPARAZIONE DISPONIBILITÀ GIORNALIERA ---
+            # --- DISPONIBILITÀ ---
             day_ass = {op: "" for op in ops}
-            available_ops = [] # Operatori presenti (anche parzialmente)
+            available_ops = []
             
             for op in ops:
                 if in_ferie.at[op, col]: day_ass[op] = "FERIE"
@@ -327,69 +328,63 @@ with tab_gen:
                 out[col] = day_ass
                 continue
 
-            # --- 3. LOGICA DI ASSEGNAZIONE "STICKY" ---
-            
-            # Lista task da assegnare oggi
+            # --- ASSEGNAZIONE TASK ---
             tasks_to_assign = copy.deepcopy(all_tasks)
-            assigned_this_day = [] # Per tracciare chi ha già lavorato oggi
+            assigned_this_day = [] 
             
-            # FASE A: MANTENIMENTO ASSEGNAZIONI SETTIMANALI (PRIORITÀ ALTA)
-            # Se un operatore ha un task settimanale ED è presente, glielo ridiamo.
+            # A. Sticky Week (Se già assegnato Lunedì e presente)
             for op in available_ops:
                 if op in weekly_assignments:
-                    # Recupera i task assegnati a questo operatore nel piano settimanale
-                    my_weekly_tasks = weekly_assignments[op]
-                    
-                    # Controlla se questi task sono ancora disponibili nel pool di oggi
-                    # (Potrebbero essere stati presi da altri se la logica fosse diversa, ma qui forziamo)
-                    tasks_confirmed = []
-                    for t in my_weekly_tasks:
+                    my_weekly = weekly_assignments[op]
+                    confirmed = []
+                    for t in my_weekly:
                         if t in tasks_to_assign:
-                            tasks_confirmed.append(t)
-                            tasks_to_assign.remove(t) # Toglie dal pool generale
+                            confirmed.append(t)
+                            tasks_to_assign.remove(t)
                     
-                    if tasks_confirmed:
-                        # Assegna
-                        t_str = " + ".join(tasks_confirmed)
+                    if confirmed:
+                        t_str = " + ".join(confirmed)
                         prefix = f"({day_ass[op]}) " if "P." in day_ass[op] else ""
                         if day_ass[op] and "P." not in day_ass[op]: day_ass[op] += " + " + t_str
                         else: day_ass[op] = prefix + t_str
-                        
                         cnt[op][t] = cnt[op].get(t, 0) + 1
                         assigned_this_day.append(op)
 
-            # FASE B: RIEMPIMENTO GAP (ORPHAN TASKS O NUOVE ASSEGNAZIONI)
-            # Assegna i task rimanenti (o perché è Lunedì, o perché il titolare è assente)
-            
+            # B. Nuove Assegnazioni (Lunedì o Sostituzioni)
             def load(op):
                 if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
-                if op in assigned_this_day: return day_ass[op].count('+') + 1 # Già ha task settimanali
+                if op in assigned_this_day: return day_ass[op].count('+') + 1
                 if not day_ass[op]: return 0
                 return day_ass[op].count('+') + 1
 
             for t in tasks_to_assign:
-                # Trova candidati capaci
                 cands = [op for op in available_ops if t in CONFIG["SKILLS"].get(op, [])]
-                
                 if not cands:
                     if col not in missing: missing[col] = []
                     missing[col].append(t)
                     continue
                 
                 random.shuffle(cands)
-                # Ordina: Prima chi è scarico oggi, poi chi l'ha fatto meno nel mese
-                cands.sort(key=lambda x: (load(x), cnt[x].get(t, 0)))
+                
+                # CRITERI DI ORDINAMENTO (PESI):
+                # 1. Carico Giornaliero (Meno lavora oggi meglio è)
+                # 2. ROTAZIONE SETTIMANALE: Ha fatto questo task settimana scorsa? (1=Si=Male, 0=No=Bene)
+                # 3. Carico Mensile (Per equilibrare sul lungo periodo)
+                cands.sort(key=lambda x: (
+                    load(x), 
+                    1 if t in last_week_assignments.get(x, []) else 0, # Penalità Rotazione
+                    cnt[x].get(t, 0)
+                ))
                 
                 chosen = None
                 for op in cands:
                     if load(op) < max_tasks: chosen = op; break
                 
-                if not chosen: # Force assign a chiunque non sia in ferie
+                if not chosen: 
                     for op in cands:
                         if day_ass[op] not in ["FERIE"]: chosen = op; break
                 
                 if chosen:
-                    # Assegna nel giorno
                     prefix = f"({day_ass[chosen]}) " if "P." in day_ass[chosen] else ""
                     if day_ass[chosen] and "P." not in day_ass[chosen]: 
                         day_ass[chosen] += f" + {t}"
@@ -399,93 +394,81 @@ with tab_gen:
                     cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
                     assigned_this_day.append(chosen)
                     
-                    # SALVA NEL PIANO SETTIMANALE SE NON ESISTE (Es. è Lunedì o è un nuovo task)
-                    # Nota: Se è un sostituto (il titolare originale è in weekly_assignments ma è assente),
-                    # NON sovrascriviamo il weekly_assignments del titolare.
-                    # Ma se nessuno aveva questo task, il sostituto diventa titolare per la settimana?
-                    # Semplificazione richiesta: "Se manca, va ad altro, se torna riprende".
-                    # Quindi salviamo in weekly solo se non c'era già un assegnatario per quel task?
-                    # O più semplicemente: Salviamo in weekly_assignments solo il Lunedì.
-                    
-                    if d_obj.weekday() == 0: # Solo Lunedì "congela" il piano
+                    # Salva nel piano settimanale (Solo se è Lunedì o prima assegnazione)
+                    if d_obj.weekday() == 0:
                         if chosen not in weekly_assignments: weekly_assignments[chosen] = []
                         weekly_assignments[chosen].append(t)
 
-            # --- 4. PAUSE & TELEFONI ---
+            # --- PAUSE (ROTAZIONE) ---
             
-            # Gestione Pause Sticky
-            slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
-            random.shuffle(slots)
+            # Prepara la lista slot e ruotala in base alla settimana
+            base_slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
+            if base_slots:
+                # Rotazione: sposta l'inizio della lista in base al numero settimana
+                rotate_idx = current_week_idx % len(base_slots)
+                # Esempio: [A, B, C] -> Week1: [B, C, A] -> Week2: [C, A, B]
+                rotated_slots = base_slots[rotate_idx:] + base_slots[:rotate_idx]
+            else:
+                rotated_slots = []
+
             s_i = 0
-            
             for op in available_ops:
-                # Solo se lavora giornata intera (no permessi, no ferie)
                 if "P." not in day_ass[op] and "FERIE" not in day_ass[op]:
-                    
                     p_time = None
-                    
-                    # 1. Pausa Fissa (Configurazione)
+                    # 1. Fissa
                     if op in CONFIG["PAUSE"]["FISSI"]:
                         p_time = CONFIG["PAUSE"]["FISSI"][op]
-                    
-                    # 2. Pausa Settimanale (Se già assegnata lunedì)
+                    # 2. Settimanale già assegnata
                     elif op in weekly_lunches:
                         p_time = weekly_lunches[op]
-                    
-                    # 3. Nuova Pausa (Rotazione)
-                    elif slots:
-                        p_time = slots[s_i % len(slots)]
+                    # 3. Nuova da slot rotanti
+                    elif rotated_slots:
+                        p_time = rotated_slots[s_i % len(rotated_slots)]
                         s_i += 1
-                        # Se è Lunedì, salva per la settimana
                         if d_obj.weekday() == 0:
                             weekly_lunches[op] = p_time
                     
-                    if p_time:
-                        day_ass[op] += f"\n☕ {p_time}"
+                    if p_time: day_ass[op] += f"\n☕ {p_time}"
             
             out[col] = day_ass
             
         res_df = pd.DataFrame(out)
 
-        # -----------------------------------------------------------
-        # VISUALIZZAZIONE FINALE: NO SAB/DOM
-        # -----------------------------------------------------------
-        # Mostra colonne Lun-Ven (Inclusi festivi se cadono in settimana)
+        # Filtro Visualizzazione (No Weekend)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
-        final_view_df = res_df[cols_to_show]
+        final_view = res_df[cols_to_show]
 
-        # Aggiungi Telefono all'intestazione (Indice)
-        new_index = []
-        for op in final_view_df.index:
-            tel = CONFIG["TELEFONI"].get(op)
-            lbl = f"{op} (☎️ {tel})" if tel else op
-            new_index.append(lbl)
-        final_view_df.index = new_index
+        # Index con Telefono
+        new_idx = []
+        for op in final_view.index:
+            t = CONFIG["TELEFONI"].get(op)
+            new_idx.append(f"{op} (☎️ {t})" if t else op)
+        final_view.index = new_idx
 
         def styler(v):
             s = str(v)
-            if "FERIE" in s: return "background-color: #ffc4c4" # Rosa Pastello
+            if "FERIE" in s: return "background-color: #ffc4c4" # Pastello
             if "P." in s: return "background-color: #ffd966"
-            if "🎉" in s: return "background-color: #f4cccc" # Festivo
+            if "🎉" in s: return "background-color: #f4cccc"
             for t, c in col_map.items():
                 if t in s: return f"background-color: {c}"
             return ""
 
-        st.success("Turni Calcolati con logica Settimanale!")
+        st.success("Turni Generati (Rotazione Attiva!)")
         
         weeks = []
-        curr_week = []
-        for col in final_view_df.columns:
-            if "Lun" in col and curr_week: weeks.append(curr_week); curr_week = []
-            curr_week.append(col)
-        if curr_week: weeks.append(curr_week)
+        cw = []
+        for c in final_view.columns:
+            if "Lun" in c and cw: weeks.append(cw); cw = []
+            cw.append(c)
+        if cw: weeks.append(cw)
 
-        for i, w_cols in enumerate(weeks):
+        for i, w in enumerate(weeks):
             st.markdown(f"### 📅 Settimana {i+1}")
-            st.dataframe(final_view_df[w_cols].style.applymap(styler), use_container_width=True)
+            st.dataframe(final_view[w].style.applymap(styler), use_container_width=True)
             with st.expander(f"Copia Settimana {i+1}"):
-                st.code(final_view_df[w_cols].to_csv(sep='\t'), language='text')
+                st.code(final_view[w].to_csv(sep='\t'), language='text')
             st.markdown("---")
 
-        if missing: st.warning("Task scoperti:"); st.json(missing)
-        st.download_button("Scarica Mese (No Weekend)", final_view_df.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
+        if missing: st.warning("Non assegnati:"); st.json(missing)
+        st.download_button("Scarica CSV", final_view.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
