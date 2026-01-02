@@ -6,7 +6,7 @@ import json
 import copy
 from datetime import date
 import holidays
-from github import Github
+from github import Github, GithubException
 
 st.set_page_config(page_title="Turni Trust Pro - Cloud", layout="wide")
 st.title("☁️ Turni Trust - Cloud Connected")
@@ -34,7 +34,7 @@ def get_file_from_github(filename):
         return None, None
 
 def save_file_to_github(filename, content, sha):
-    """Salva un file specifico su GitHub"""
+    """Salva un file su GitHub gestendo i conflitti (Errore 409)"""
     try:
         token = st.secrets["GITHUB_TOKEN"]
         repo_name = st.secrets["REPO_NAME"]
@@ -47,18 +47,34 @@ def save_file_to_github(filename, content, sha):
                 sha = contents.sha
             except:
                 repo.create_file(filename, f"Create {filename}", json.dumps(content, indent=4))
-                return True
+                return True, None
 
-        repo.update_file(
+        update_result = repo.update_file(
             path=filename,
             message=f"Update {filename}",
             content=json.dumps(content, indent=4),
             sha=sha
         )
-        return True
-    except Exception as e:
-        st.error(f"Errore salvataggio {filename}: {e}")
-        return False
+        return True, update_result['content'].sha
+
+    except GithubException as e:
+        if e.status == 409:
+            try:
+                contents = repo.get_contents(filename)
+                new_sha = contents.sha
+                update_result = repo.update_file(
+                    path=filename,
+                    message=f"Update {filename} (Retry)",
+                    content=json.dumps(content, indent=4),
+                    sha=new_sha
+                )
+                return True, update_result['content'].sha
+            except Exception as e2:
+                st.error(f"Errore durante il retry automatico: {e2}")
+                return False, None
+        else:
+            st.error(f"Errore salvataggio {filename}: {e}")
+            return False, None
 
 # ==============================================================================
 # 2. CARICAMENTO DATI
@@ -66,11 +82,11 @@ def save_file_to_github(filename, content, sha):
 
 if 'config' not in st.session_state:
     cfg_data, cfg_sha = get_file_from_github("config.json")
-    if cfg_data and "SERVICES" in cfg_data: # Check base validità
+    if cfg_data and "SERVICES" in cfg_data:
         st.session_state.config = cfg_data
         st.session_state.config_sha = cfg_sha
     else:
-        st.error("Errore: config.json mancante o non valido su GitHub. Carica il JSON corretto.")
+        st.error("Errore critico: config.json mancante o struttura errata su GitHub.")
         st.stop()
     
     leaves_data, leaves_sha = get_file_from_github("leaves.json")
@@ -100,8 +116,8 @@ with tab_settings:
         new_svc = c1.text_input("Nuovo Servizio")
         if c2.button("➕ Aggiungi") and new_svc:
             services[new_svc] = {"color": "#cccccc", "tasks": []}
-            save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-            st.rerun()
+            success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            if success: st.session_state.config_sha = new_sha; st.rerun()
 
         for s_name, s_data in services.items():
             c_col, c_name, c_del = st.columns([0.5, 3, 1])
@@ -116,13 +132,13 @@ with tab_settings:
             
             if st.button(f"💾 Aggiorna {s_name}"):
                 s_data["tasks"] = [t.strip() for t in new_tasks.split("\n") if t.strip()]
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                st.rerun()
+                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                if success: st.session_state.config_sha = new_sha; st.rerun()
             
             if c_del.button("🗑️", key=f"del_{s_name}"):
                 del services[s_name]
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                st.rerun()
+                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                if success: st.session_state.config_sha = new_sha; st.rerun()
             st.divider()
 
     # 2. OPERATORI
@@ -132,8 +148,8 @@ with tab_settings:
         if st.button("💾 Salva Operatori"):
             CONFIG["OPERATORS"] = [x.strip() for x in new_ops.split("\n") if x.strip()]
             CONFIG["SKILLS"] = {op: CONFIG["SKILLS"].get(op, []) for op in CONFIG["OPERATORS"]}
-            save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-            st.rerun()
+            success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            if success: st.session_state.config_sha = new_sha; st.rerun()
 
     # 3. MATRICE SKILL
     with st.expander("🛠️ 3. Matrice Competenze", expanded=False):
@@ -159,8 +175,8 @@ with tab_settings:
                     others = [s for s in old if not s.startswith(f"{sel_svc}:")]
                     new_sel = [c for c in cols_show if row[c]]
                     CONFIG["SKILLS"][op] = others + new_sel
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
-                st.success("Competenze salvate!")
+                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                if success: st.session_state.config_sha = new_sha; st.success("Salvato!")
 
     # 4. PAUSE
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
@@ -171,13 +187,15 @@ with tab_settings:
             ed_ph = st.data_editor(ph_df, hide_index=True)
             if st.button("💾 Salva Telefoni"):
                 CONFIG["TELEFONI"] = {r["Operatore"]: r["Orario"] for _, r in ed_ph.iterrows() if r["Orario"]}
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                if success: st.session_state.config_sha = new_sha
         with c2:
             st.markdown("**Slot Pause**")
             slots = st.text_area("Slot", value="\n".join(CONFIG["PAUSE"]["SLOTS"]))
             if st.button("💾 Salva Slot"):
                 CONFIG["PAUSE"]["SLOTS"] = [x.strip() for x in slots.split("\n") if x.strip()]
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                success, new_sha = save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+                if success: st.session_state.config_sha = new_sha
 
 # ------------------------------------------------------------------------------
 # TAB GENERAZIONE
@@ -209,11 +227,9 @@ with tab_gen:
     
     def create_bool_df(saved_dict, prefill=False):
         df = pd.DataFrame(False, index=ops, columns=cols)
-        # Pre-fill weekend solo se non ci sono dati salvati
         if prefill and not saved_dict:
             for i, c in enumerate(cols):
                 if days[i].weekday() >= 5 or days[i] in hols: df[c] = True
-        
         if saved_dict:
             temp_df = pd.DataFrame(saved_dict)
             df.update(temp_df)
@@ -223,7 +239,7 @@ with tab_gen:
     t1, t2, t3 = st.tabs(["🔴 FERIE", "🟡 P. MATTINA", "🟠 P. POMERIGGIO"])
     
     with t1:
-        st.caption("Spunta i giorni di assenza (Ferie/Malattia). I weekend sono pre-compilati ma modificabili.")
+        st.caption("Spunta i giorni di assenza completa.")
         df_ferie = create_bool_df(current_leaves.get("ferie"), prefill=True)
         in_ferie = st.data_editor(df_ferie, key="ed_ferie", height=250)
         
@@ -242,10 +258,10 @@ with tab_gen:
                 "p_matt": in_pm.to_dict(),
                 "p_pom": in_pp.to_dict()
             }
-            save_file_to_github("leaves.json", st.session_state.leaves, st.session_state.leaves_sha)
-            _, new_sha = get_file_from_github("leaves.json")
-            st.session_state.leaves_sha = new_sha
-            st.success("Assenze salvate!")
+            success, new_sha = save_file_to_github("leaves.json", st.session_state.leaves, st.session_state.leaves_sha)
+            if success:
+                st.session_state.leaves_sha = new_sha
+                st.success("Assenze salvate!")
 
     st.divider()
 
@@ -270,17 +286,15 @@ with tab_gen:
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # Festivi e Weekend: Se segnati come Ferie, salta. Altrimenti lavora.
-            is_holiday = d_obj in hols
-            is_weekend = d_obj.weekday() >= 5
-            
-            # Se è festivo/weekend E tutti hanno ferie (o sono assenti) -> Salta
-            # Ma se l'utente ha tolto la spunta a qualcuno, lo assegniamo.
-            # Logica: Se è weekend e la persona è in ferie, salta persona.
-            # Se tutti saltano, giorno vuoto.
-            
-            if is_holiday:
-                out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
+            # 1. GESTIONE FESTIVI
+            if d_obj in hols:
+                 out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
+                 continue
+
+            # 2. GESTIONE WEEKEND (SABATO E DOMENICA)
+            # Regola rigorosa: Se è weekend, non si assegna NULLA. Cella vuota.
+            if d_obj.weekday() >= 5:
+                out[col] = {op: "" for op in ops}
                 continue
 
             day_ass = {op: "" for op in ops}
@@ -292,9 +306,9 @@ with tab_gen:
                 elif in_pp.at[op, col]: day_ass[op] = "P.POM"; avail.append(op)
                 else: avail.append(op)
             
-            # Se nessuno è disponibile (es. domenica tutti in ferie), salta assegnazione
+            # Se nessuno è disponibile (es. ponte aziendale non festivo)
             if not avail:
-                out[col] = day_ass # Lascia solo le scritte FERIE
+                out[col] = day_ass
                 continue
 
             day_tasks = copy.deepcopy(all_tasks)
@@ -336,7 +350,7 @@ with tab_gen:
             random.shuffle(slots)
             s_i = 0
             for op in avail:
-                if "P." not in day_ass[op]: # Solo chi fa giornata intera
+                if "P." not in day_ass[op]: 
                     p = CONFIG["PAUSE"]["FISSI"].get(op)
                     if not p and slots: p = slots[s_i % len(slots)]; s_i += 1
                     if p: day_ass[op] += f"\n☕ {p}"
@@ -349,7 +363,7 @@ with tab_gen:
         res_df = pd.DataFrame(out)
         def styler(v):
             s = str(v)
-            if "FERIE" in s: return "background-color: #e06666"
+            if "FERIE" in s: return "background-color: #ffc4c4" # Rosso Pastello Delicato
             if "P." in s: return "background-color: #ffd966"
             if "🎉" in s: return "background-color: #f4cccc"
             for t, c in col_map.items():
@@ -358,7 +372,7 @@ with tab_gen:
 
         st.success("Turni Calcolati!")
         
-        # VISUALIZZAZIONE SETTIMANALE
+        # VISTA SETTIMANALE
         weeks = []
         curr_week = []
         for col in res_df.columns:
