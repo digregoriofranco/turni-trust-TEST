@@ -86,7 +86,7 @@ if 'config' not in st.session_state:
         st.session_state.config = cfg_data
         st.session_state.config_sha = cfg_sha
     else:
-        st.error("Errore critico: config.json mancante o non valido. Controlla GitHub.")
+        st.error("Errore critico: config.json mancante o struttura errata su GitHub.")
         st.stop()
     
     leaves_data, leaves_sha = get_file_from_github("leaves.json")
@@ -274,7 +274,6 @@ with tab_gen:
         missing = {}
         cnt = {op: {} for op in ops}
         
-        # Mappa colori e task
         all_tasks = []
         col_map = {}
         for s, d in CONFIG["SERVICES"].items():
@@ -286,35 +285,32 @@ with tab_gen:
         def scarcity(t): return sum(1 for op in ops if t in CONFIG["SKILLS"].get(op, []))
         all_tasks.sort(key=scarcity)
         
-        # MEMORIA STORICA (Per rotazione)
-        weekly_assignments = {} # {Op: [Task]}
-        last_week_assignments = {} # {Op: [Task]} (Copia della settimana precedente)
+        weekly_assignments = {} 
+        last_week_assignments = {} 
         weekly_lunches = {}
         
-        current_week_idx = 0 # Contatore settimane per rotazione pause
+        current_week_idx = 0 
         
         for i, col in enumerate(cols):
             d_obj = days[i]
             
-            # --- CAMBIO SETTIMANA (LUNEDÌ) ---
             if d_obj.weekday() == 0:
-                # 1. Archivia la settimana appena passata per evitare ripetizioni
                 last_week_assignments = copy.deepcopy(weekly_assignments)
-                # 2. Resetta assegnazioni correnti
                 weekly_assignments = {}
                 weekly_lunches = {}
-                # 3. Avanza contatore per rotazione pause
                 current_week_idx += 1
 
-            # --- GESTIONE FESTIVI E WEEKEND ---
-            if d_obj.weekday() >= 5: # Weekend -> Vuoto
+            # GESTIONE WEEKEND E FESTIVI
+            # Se weekend -> Vuoto
+            if d_obj.weekday() >= 5: 
                 out[col] = {op: "" for op in ops}
                 continue
-            if d_obj in hols: # Festivo -> Visibile
+            
+            # Se festivo -> Visibile
+            if d_obj in hols: 
                 out[col] = {op: f"🎉 {hols[d_obj]}" for op in ops}
                 continue
 
-            # --- DISPONIBILITÀ ---
             day_ass = {op: "" for op in ops}
             available_ops = []
             
@@ -328,11 +324,11 @@ with tab_gen:
                 out[col] = day_ass
                 continue
 
-            # --- ASSEGNAZIONE TASK ---
+            # ASSEGNAZIONE
             tasks_to_assign = copy.deepcopy(all_tasks)
             assigned_this_day = [] 
             
-            # A. Sticky Week (Se già assegnato Lunedì e presente)
+            # A. Sticky Week
             for op in available_ops:
                 if op in weekly_assignments:
                     my_weekly = weekly_assignments[op]
@@ -350,7 +346,7 @@ with tab_gen:
                         cnt[op][t] = cnt[op].get(t, 0) + 1
                         assigned_this_day.append(op)
 
-            # B. Nuove Assegnazioni (Lunedì o Sostituzioni)
+            # B. Nuovi
             def load(op):
                 if day_ass[op] in ["FERIE", "P.MATT", "P.POM"]: return 99
                 if op in assigned_this_day: return day_ass[op].count('+') + 1
@@ -365,14 +361,9 @@ with tab_gen:
                     continue
                 
                 random.shuffle(cands)
-                
-                # CRITERI DI ORDINAMENTO (PESI):
-                # 1. Carico Giornaliero (Meno lavora oggi meglio è)
-                # 2. ROTAZIONE SETTIMANALE: Ha fatto questo task settimana scorsa? (1=Si=Male, 0=No=Bene)
-                # 3. Carico Mensile (Per equilibrare sul lungo periodo)
                 cands.sort(key=lambda x: (
                     load(x), 
-                    1 if t in last_week_assignments.get(x, []) else 0, # Penalità Rotazione
+                    1 if t in last_week_assignments.get(x, []) else 0, # Penalità rotazione
                     cnt[x].get(t, 0)
                 ))
                 
@@ -394,19 +385,14 @@ with tab_gen:
                     cnt[chosen][t] = cnt[chosen].get(t, 0) + 1
                     assigned_this_day.append(chosen)
                     
-                    # Salva nel piano settimanale (Solo se è Lunedì o prima assegnazione)
                     if d_obj.weekday() == 0:
                         if chosen not in weekly_assignments: weekly_assignments[chosen] = []
                         weekly_assignments[chosen].append(t)
 
-            # --- PAUSE (ROTAZIONE) ---
-            
-            # Prepara la lista slot e ruotala in base alla settimana
+            # PAUSE
             base_slots = copy.deepcopy(CONFIG["PAUSE"]["SLOTS"])
             if base_slots:
-                # Rotazione: sposta l'inizio della lista in base al numero settimana
                 rotate_idx = current_week_idx % len(base_slots)
-                # Esempio: [A, B, C] -> Week1: [B, C, A] -> Week2: [C, A, B]
                 rotated_slots = base_slots[rotate_idx:] + base_slots[:rotate_idx]
             else:
                 rotated_slots = []
@@ -415,13 +401,10 @@ with tab_gen:
             for op in available_ops:
                 if "P." not in day_ass[op] and "FERIE" not in day_ass[op]:
                     p_time = None
-                    # 1. Fissa
                     if op in CONFIG["PAUSE"]["FISSI"]:
                         p_time = CONFIG["PAUSE"]["FISSI"][op]
-                    # 2. Settimanale già assegnata
                     elif op in weekly_lunches:
                         p_time = weekly_lunches[op]
-                    # 3. Nuova da slot rotanti
                     elif rotated_slots:
                         p_time = rotated_slots[s_i % len(rotated_slots)]
                         s_i += 1
@@ -434,7 +417,7 @@ with tab_gen:
             
         res_df = pd.DataFrame(out)
 
-        # Filtro Visualizzazione (No Weekend)
+        # Filtro Visualizzazione (No Weekend, Ma Festivi SI)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
         final_view = res_df[cols_to_show]
 
@@ -471,4 +454,37 @@ with tab_gen:
             st.markdown("---")
 
         if missing: st.warning("Non assegnati:"); st.json(missing)
-        st.download_button("Scarica CSV", final_view.to_csv(sep=";").encode("utf-8"), f"Turni_{mese_s}.csv")
+        
+        # DOWNLOAD CSV
+        st.download_button(
+            label="Scarica CSV",
+            data=final_view.to_csv(sep=";").encode("utf-8"),
+            file_name=f"Turni_{mese_s}.csv",
+            mime="text/csv"
+        )
+
+        # DOWNLOAD HTML (Per colori)
+        html_content = final_view.style.applymap(styler).to_html()
+        # Aggiungiamo un po' di CSS per renderla carina anche in HTML
+        html_structure = f"""
+        <html>
+        <head>
+            <style>
+                table {{ border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: center; }}
+                th {{ background-color: #f2f2f2; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+            </style>
+        </head>
+        <body>
+            <h2>Turni {mese_s} {anno_s}</h2>
+            {html_content}
+        </body>
+        </html>
+        """
+        st.download_button(
+            label="Scarica Tabella HTML (Colorata)",
+            data=html_structure,
+            file_name=f"Turni_{mese_s}.html",
+            mime="text/html"
+        )
