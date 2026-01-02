@@ -62,7 +62,9 @@
         "Gurpal S.": [
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "Scontrina: Presidio Chat Mattina",
+            "Scontrina: Presidio Chat Pomeriggio"
         ],
         "Nicola T.": [
             "SPID: PECMAN/SDO (SPID)",
@@ -95,7 +97,9 @@
         "Erica B.": [
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "Scontrina: Presidio Chat Mattina",
+            "Scontrina: Presidio Chat Pomeriggio"
         ],
         "Daniela C.": [
             "FATTURAZIONE: SDO",
@@ -115,7 +119,9 @@
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN",
             "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid"
+            "SPID: cc.spid",
+            "Scontrina: Presidio Chat Mattina",
+            "Scontrina: Presidio Chat Pomeriggio"
         ],
         "Daniela G.": [
             "SPID: PECMAN/SDO (SPID)",
@@ -130,7 +136,9 @@
             "FATTURAZIONE: PECMAN",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "Scontrina: Presidio Chat Mattina",
+            "Scontrina: Presidio Chat Pomeriggio"
         ],
         "Caterina B.": [
             "FATTURAZIONE: cc.fatturazione",
