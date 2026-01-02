@@ -122,8 +122,6 @@ def styler(v, col_map):
     return ""
 
 def display_weeks(df_month, col_map, month_name, year):
-    """Funzione che prende il DF mensile, lo spezza in settimane e crea i download"""
-    
     weeks_list = []
     current_week_cols = []
     for col in df_month.columns:
@@ -137,11 +135,9 @@ def display_weeks(df_month, col_map, month_name, year):
     for i, w_df in enumerate(weeks_list):
         week_num = i + 1
         st.markdown(f"### 📅 Settimana {week_num}")
-        
         st.dataframe(w_df.style.applymap(lambda x: styler(x, col_map)), use_container_width=True)
         
         c1, c2 = st.columns(2)
-        
         csv_data = w_df.to_csv(sep=";").encode("utf-8")
         c1.download_button(
             label=f"📥 Scarica CSV (Settimana {week_num})",
@@ -181,7 +177,6 @@ def display_weeks(df_month, col_map, month_name, year):
             mime="text/html",
             key=f"dl_html_{month_name}_{week_num}_{random.randint(0,9999)}"
         )
-        
         st.markdown("---")
 
 # ==============================================================================
@@ -268,22 +263,59 @@ with tab_settings:
                 save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
                 st.success("Salvato!")
 
-    # 4. PAUSE
+    # 4. PAUSE E TELEFONI
     with st.expander("☕ 4. Telefoni & Pause", expanded=False):
         c1, c2 = st.columns(2)
+        
         with c1:
-            st.markdown("**Orari Telefono**")
-            ph_df = pd.DataFrame([{"Operatore": op, "Orario": CONFIG["TELEFONI"].get(op, "")} for op in CONFIG["OPERATORS"]])
-            ed_ph = st.data_editor(ph_df, hide_index=True)
-            if st.button("💾 Salva Telefoni"):
-                CONFIG["TELEFONI"] = {r["Operatore"]: r["Orario"] for _, r in ed_ph.iterrows() if r["Orario"]}
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            st.markdown("#### 📞 Orari Telefono")
+            ph_rows = []
+            for op in CONFIG["OPERATORS"]:
+                ph_rows.append({"Operatore": op, "Orario Telefono": CONFIG["TELEFONI"].get(op, "")})
+            
+            df_ph = pd.DataFrame(ph_rows)
+            ed_ph = st.data_editor(df_ph, hide_index=True, use_container_width=True, key="ph_editor")
+            
         with c2:
-            st.markdown("**Slot Pause**")
-            slots = st.text_area("Slot", value="\n".join(CONFIG["PAUSE"]["SLOTS"]))
-            if st.button("💾 Salva Slot"):
-                CONFIG["PAUSE"]["SLOTS"] = [x.strip() for x in slots.split("\n") if x.strip()]
-                save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            st.markdown("#### 🥪 Gestione Pause (Fisse vs Variabili)")
+            st.info("Se lasci l'orario **VUOTO**, la pausa sarà **VARIABILE** (a rotazione sugli slot disponibili sotto). Se scrivi un orario, sarà **FISSA**.")
+            
+            # Tabella Pause Fisse
+            pause_rows = []
+            for op in CONFIG["OPERATORS"]:
+                # Se c'è una pausa fissa salvata, la mostriamo, altrimenti vuoto
+                fixed_p = CONFIG["PAUSE"]["FISSI"].get(op, "")
+                pause_rows.append({"Operatore": op, "Orario Pausa (Es. 13:00)": fixed_p})
+            
+            df_pause = pd.DataFrame(pause_rows)
+            ed_pause = st.data_editor(df_pause, hide_index=True, use_container_width=True, key="pause_editor")
+            
+            st.markdown("##### 🎰 Slot per Pause Variabili (Rotazione)")
+            slots_str = "\n".join(CONFIG["PAUSE"]["SLOTS"])
+            new_slots = st.text_area("Elenco Slot (uno per riga)", value=slots_str, height=100)
+
+        # Pulsante unico di salvataggio per la sezione
+        if st.button("💾 Salva Telefoni e Pause"):
+            # 1. Salva Telefoni
+            new_telefoni = {}
+            for index, row in ed_ph.iterrows():
+                if row["Orario Telefono"]:
+                    new_telefoni[row["Operatore"]] = row["Orario Telefono"]
+            CONFIG["TELEFONI"] = new_telefoni
+            
+            # 2. Salva Pause Fisse
+            new_fissi = {}
+            for index, row in ed_pause.iterrows():
+                if row["Orario Pausa (Es. 13:00)"]:
+                    new_fissi[row["Operatore"]] = row["Orario Pausa (Es. 13:00)"]
+            CONFIG["PAUSE"]["FISSI"] = new_fissi
+            
+            # 3. Salva Slot
+            CONFIG["PAUSE"]["SLOTS"] = [x.strip() for x in new_slots.split("\n") if x.strip()]
+            
+            save_file_to_github("config.json", CONFIG, st.session_state.config_sha)
+            st.success("Configurazione salvata!")
+            st.rerun()
 
 # ------------------------------------------------------------------------------
 # TAB GENERAZIONE
@@ -299,7 +331,7 @@ with tab_gen:
     with c2:
         anno_s = st.number_input("Anno", 2024, 2030, 2026)
     with c3:
-        max_tasks = st.slider("Max Task Simultanei", 1, 6, 2)
+        max_tasks = st.slider("Max Task Simultanei", 1, 6, 3)
 
     LEAVES_KEY = f"{anno_s}_{mese_n}"
     _, nd = calendar.monthrange(anno_s, mese_n)
@@ -354,7 +386,6 @@ with tab_gen:
     saved_shifts_for_month = st.session_state.shifts.get(LEAVES_KEY, None)
     smart_update = False
     
-    # GESTIONE RESET E SMART UPDATE
     if saved_shifts_for_month:
         st.warning(f"Ci sono turni già salvati per {mese_s} {anno_s}.")
         col_opt1, col_opt2 = st.columns([1, 1])
@@ -430,14 +461,11 @@ with tab_gen:
                                 weekly_assignments[op].extend(found_tasks)
 
             # STANDARD ASSIGNMENT
-            # Sticky Week con LIMITE (Load Shedding)
             for op in available_ops:
                 if op not in assigned_this_day and op in weekly_assignments:
                     my_weekly = weekly_assignments[op]
-                    # Solo task validi e nel limite max
                     valid_weekly = [t for t in my_weekly if t in tasks_to_assign]
                     confirmed = valid_weekly[:max_tasks]
-                    
                     for t in confirmed: tasks_to_assign.remove(t)
                     
                     if confirmed:
@@ -513,7 +541,7 @@ with tab_gen:
              st.session_state.shifts_sha = new_sha
              st.toast("Turni salvati!", icon="💾")
 
-        # VISUALIZZAZIONE (Settimanale)
+        # VISUALIZZAZIONE
         res_df = pd.DataFrame(out)
         cols_to_show = [c for i, c in enumerate(cols) if days[i].weekday() < 5]
         final_view = res_df[cols_to_show]
@@ -545,4 +573,3 @@ with tab_gen:
         saved_view.index = new_idx_viz
 
         display_weeks(saved_view, get_style_map(), mese_s, anno_s)
-
