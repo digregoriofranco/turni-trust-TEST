@@ -68,23 +68,25 @@
         "Paolo G.": [
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Lorenzo T.": [
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Andrea V.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Federico P.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "FIRMA: cc.firma",
+            "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Erica B.": [
             "PEC: Caselle Occupate",
