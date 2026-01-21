@@ -1618,7 +1618,7 @@
                 "Francesca F.": false,
                 "Lorenza V.": false,
                 "Daniela G.": false,
-                "Katia B.": true,
+                "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false
             },
@@ -1650,7 +1650,7 @@
                 "Francesca F.": false,
                 "Lorenza V.": false,
                 "Daniela G.": false,
-                "Katia B.": true,
+                "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false
             },
@@ -1666,7 +1666,7 @@
                 "Francesca F.": false,
                 "Lorenza V.": false,
                 "Daniela G.": false,
-                "Katia B.": true,
+                "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false
             },
@@ -1682,7 +1682,7 @@
                 "Francesca F.": false,
                 "Lorenza V.": false,
                 "Daniela G.": false,
-                "Katia B.": true,
+                "Katia B.": false,
                 "Caterina B.": false,
                 "Maria S.": false
             },
@@ -1728,7 +1728,7 @@
                 "Erica B.": false,
                 "Daniela C.": false,
                 "Francesca F.": false,
-                "Lorenza V.": false,
+                "Lorenza V.": true,
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
@@ -2069,7 +2069,7 @@
                 "Lorenza V.": false,
                 "Daniela G.": false,
                 "Katia B.": false,
-                "Caterina B.": false,
+                "Caterina B.": true,
                 "Maria S.": false
             },
             "03 Mar": {
@@ -2179,9 +2179,9 @@
                 "Daniela C.": false,
                 "Francesca F.": false,
                 "Lorenza V.": false,
-                "Daniela G.": false,
+                "Daniela G.": true,
                 "Katia B.": false,
-                "Caterina B.": false,
+                "Caterina B.": true,
                 "Maria S.": false
             },
             "10 Mar": {
@@ -2293,7 +2293,7 @@
                 "Lorenza V.": false,
                 "Daniela G.": false,
                 "Katia B.": false,
-                "Caterina B.": false,
+                "Caterina B.": true,
                 "Maria S.": false
             },
             "17 Mar": {
@@ -2405,7 +2405,7 @@
                 "Lorenza V.": false,
                 "Daniela G.": false,
                 "Katia B.": false,
-                "Caterina B.": false,
+                "Caterina B.": true,
                 "Maria S.": false
             },
             "24 Mar": {
@@ -2756,7 +2756,7 @@
                 "Erica B.": false,
                 "Daniela C.": false,
                 "Francesca F.": false,
-                "Lorenza V.": false,
+                "Lorenza V.": true,
                 "Daniela G.": false,
                 "Katia B.": false,
                 "Caterina B.": false,
