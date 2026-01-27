@@ -60,11 +60,11 @@
             "FATTURAZIONE: PECMAN"
         ],
         "Nicola T.": [
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Paolo G.": [
             "FIRMA: cc.firma",
@@ -78,7 +78,9 @@
             "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Andrea V.": [
             "FIRMA: cc.firma",
@@ -89,14 +91,18 @@
             "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Erica B.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Daniela C.": [
             "PEC: Caselle Occupate",
@@ -111,19 +117,19 @@
             "FATTURAZIONE: PECMAN"
         ],
         "Lorenza V.": [
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid",
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Daniela G.": [
-            "SPID: PECMAN/SDO (SPID)",
-            "SPID: cc.spid",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Katia B.": [
             "Scontrina: Presidio Chat Mattina",
