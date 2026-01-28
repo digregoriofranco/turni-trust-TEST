@@ -524,8 +524,8 @@
             "Francesca F.": "PEC: PECMAN/SDO MATTINA\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO POMERIGGIO\n\u2615 13:00 - 14:30",
-            "Katia B.": "FATTURAZIONE: cc.fatturazione\n\u2615 12:30 - 14:00",
-            "Caterina B.": "\n\u2615 13:00 - 14:30",
+            "Katia B.": "FERIE",
+            "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
         },
@@ -626,7 +626,7 @@
             "Francesca F.": "\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: SDO + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: Caselle Occupate + SPID: cc.spid\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 13:30 - 15:00",
+            "Katia B.": "\n\u2615 12:30 - 14:00",
             "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -643,7 +643,7 @@
             "Francesca F.": "\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: SDO + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: Caselle Occupate + SPID: cc.spid\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 13:30 - 15:00",
+            "Katia B.": "\n\u2615 12:30 - 14:00",
             "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -660,7 +660,7 @@
             "Francesca F.": "\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: SDO + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: Caselle Occupate + SPID: cc.spid\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 13:30 - 15:00",
+            "Katia B.": "\n\u2615 12:30 - 14:00",
             "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -677,7 +677,7 @@
             "Francesca F.": "\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: SDO + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: Caselle Occupate + SPID: cc.spid\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 13:30 - 15:00",
+            "Katia B.": "\n\u2615 12:30 - 14:00",
             "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -694,7 +694,7 @@
             "Francesca F.": "\n\u2615 13:00 - 14:30",
             "Lorenza V.": "FATTURAZIONE: SDO + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: Caselle Occupate + SPID: cc.spid\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 13:30 - 15:00",
+            "Katia B.": "\n\u2615 12:30 - 14:00",
             "Caterina B.": "FATTURAZIONE: cc.fatturazione\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -745,7 +745,7 @@
             "Francesca F.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Lorenza V.": "SPID: cc.spid\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO MATTINA + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 12:30 - 14:00",
+            "Katia B.": "\n\u2615 13:30 - 15:00",
             "Caterina B.": "FATTURAZIONE: SDO\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -762,7 +762,7 @@
             "Francesca F.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Lorenza V.": "SPID: cc.spid\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO MATTINA + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 12:30 - 14:00",
+            "Katia B.": "\n\u2615 13:30 - 15:00",
             "Caterina B.": "FATTURAZIONE: SDO\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -779,7 +779,7 @@
             "Francesca F.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Lorenza V.": "SPID: cc.spid\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO MATTINA + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 12:30 - 14:00",
+            "Katia B.": "\n\u2615 13:30 - 15:00",
             "Caterina B.": "FATTURAZIONE: SDO\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -796,7 +796,7 @@
             "Francesca F.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Lorenza V.": "SPID: cc.spid\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO MATTINA + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 12:30 - 14:00",
+            "Katia B.": "\n\u2615 13:30 - 15:00",
             "Caterina B.": "FATTURAZIONE: SDO\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
@@ -813,7 +813,7 @@
             "Francesca F.": "FATTURAZIONE: PECMAN\n\u2615 13:00 - 14:30",
             "Lorenza V.": "SPID: cc.spid\n\u2615 13:00 - 14:30",
             "Daniela G.": "PEC: PECMAN/SDO MATTINA + SPID: PECMAN/SDO (SPID)\n\u2615 13:00 - 14:30",
-            "Katia B.": "\n\u2615 12:30 - 14:00",
+            "Katia B.": "\n\u2615 13:30 - 15:00",
             "Caterina B.": "FATTURAZIONE: SDO\n\u2615 13:00 - 14:30",
             "Maria S.": "\n\u2615 13:00 - 14:30",
             "Pietro P.": "\n\u2615 13:00 - 14:30"
