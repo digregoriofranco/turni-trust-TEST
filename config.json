@@ -1,20 +1,20 @@
 {
     "OPERATORS": [
-        "Gurpal S.",
+        "Lorenzo T.",
         "Nicola T.",
         "Paolo G.",
-        "Lorenzo T.",
         "Andrea V.",
         "Federico P.",
         "Erica B.",
         "Daniela C.",
+        "Daniela G.",
+        "Pietro P.",
+        "Maria S.",
+        "Gurpal S.",
         "Francesca F.",
         "Lorenza V.",
-        "Daniela G.",
         "Katia B.",
-        "Caterina B.",
-        "Maria S.",
-        "Pietro P."
+        "Caterina B."
     ],
     "SERVICES": {
         "FATTURAZIONE": {
@@ -52,12 +52,14 @@
         }
     },
     "SKILLS": {
-        "Gurpal S.": [
-            "Scontrina: Presidio Chat Mattina",
-            "Scontrina: Presidio Chat Pomeriggio",
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+        "Lorenzo T.": [
+            "FIRMA: cc.firma",
+            "FIRMA: PECMAN/SDO (Firma)",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
+            "PEC: reparto.pec",
+            "PEC: Caselle attesa attivazione",
+            "PEC: PECMAN/SDO escalation"
         ],
         "Nicola T.": [
             "SPID: cc.spid",
@@ -69,15 +71,6 @@
         "Paolo G.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
-            "PEC: reparto.pec",
-            "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
-        ],
-        "Lorenzo T.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
             "PEC: PECMAN/SDO escalation"
@@ -109,6 +102,22 @@
             "PEC: PECMAN/SDO MATTINA",
             "PEC: PECMAN/SDO POMERIGGIO"
         ],
+        "Daniela G.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
+            "PEC: Caselle Occupate",
+            "PEC: PECMAN/SDO MATTINA",
+            "PEC: PECMAN/SDO POMERIGGIO"
+        ],
+        "Pietro P.": [],
+        "Maria S.": [],
+        "Gurpal S.": [
+            "Scontrina: Presidio Chat Mattina",
+            "Scontrina: Presidio Chat Pomeriggio",
+            "FATTURAZIONE: cc.fatturazione",
+            "FATTURAZIONE: SDO",
+            "FATTURAZIONE: PECMAN"
+        ],
         "Francesca F.": [
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN",
@@ -124,13 +133,6 @@
             "SPID: cc.spid",
             "SPID: PECMAN/SDO (SPID)"
         ],
-        "Daniela G.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
-        ],
         "Katia B.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
@@ -142,9 +144,7 @@
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN"
-        ],
-        "Maria S.": [],
-        "Pietro P.": []
+        ]
     },
     "PAUSE": {
         "FISSI": {
