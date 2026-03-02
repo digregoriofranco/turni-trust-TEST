@@ -94,8 +94,6 @@
             "PEC: PECMAN/SDO escalation"
         ],
         "Erica B.": [
-            "Scontrina: Presidio Chat Mattina",
-            "Scontrina: Presidio Chat Pomeriggio",
             "SPID: cc.spid",
             "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
@@ -117,37 +115,36 @@
         "Pietro P.": [],
         "Maria S.": [],
         "Gurpal S.": [
-            "Scontrina: Presidio Chat Mattina",
-            "Scontrina: Presidio Chat Pomeriggio",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Francesca F.": [
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Lorenza V.": [
-            "Scontrina: Presidio Chat Mattina",
-            "Scontrina: Presidio Chat Pomeriggio",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN",
             "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "SPID: PECMAN/SDO (SPID)",
+            "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Katia B.": [
-            "Scontrina: Presidio Chat Mattina",
-            "Scontrina: Presidio Chat Pomeriggio",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Caterina B.": [
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "Scontrina: SCONTRINA: supporto@scontrina.it"
         ]
     },
     "PAUSE": {
