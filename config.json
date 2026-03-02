@@ -126,19 +126,21 @@
             "FATTURAZIONE: PECMAN"
         ],
         "Francesca F.": [
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "FATTURAZIONE: cc.fatturazione",
+            "FATTURAZIONE: SDO",
+            "FATTURAZIONE: PECMAN"
         ],
         "Lorenza V.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
             "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "SPID: PECMAN/SDO (SPID)",
+            "FATTURAZIONE: cc.fatturazione",
+            "FATTURAZIONE: SDO",
+            "FATTURAZIONE: PECMAN"
         ],
         "Katia B.": [
             "Scontrina: Presidio Chat Mattina",
