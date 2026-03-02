@@ -3046,7 +3046,7 @@
             "02 Lun": {
                 "Lorenzo T.": false,
                 "Nicola T.": false,
-                "Paolo G.": false,
+                "Paolo G.": true,
                 "Andrea V.": false,
                 "Federico P.": false,
                 "Erica B.": false,
@@ -3454,7 +3454,7 @@
             "26 Gio": {
                 "Lorenzo T.": false,
                 "Nicola T.": false,
-                "Paolo G.": false,
+                "Paolo G.": true,
                 "Andrea V.": false,
                 "Federico P.": false,
                 "Erica B.": false,
@@ -3471,7 +3471,7 @@
             "27 Ven": {
                 "Lorenzo T.": false,
                 "Nicola T.": false,
-                "Paolo G.": false,
+                "Paolo G.": true,
                 "Andrea V.": false,
                 "Federico P.": false,
                 "Erica B.": false,
@@ -3531,7 +3531,7 @@
                 "Pietro P.": false,
                 "Maria S.": false,
                 "Gurpal S.": false,
-                "Francesca F.": false,
+                "Francesca F.": true,
                 "Lorenza V.": false,
                 "Katia B.": false,
                 "Caterina B.": false
@@ -3549,7 +3549,7 @@
                 "Maria S.": false,
                 "Gurpal S.": false,
                 "Francesca F.": false,
-                "Lorenza V.": false,
+                "Lorenza V.": true,
                 "Katia B.": false,
                 "Caterina B.": false
             }
@@ -3614,7 +3614,7 @@
                 "Federico P.": false,
                 "Erica B.": false,
                 "Daniela C.": false,
-                "Daniela G.": false,
+                "Daniela G.": true,
                 "Pietro P.": false,
                 "Maria S.": false,
                 "Gurpal S.": false,
@@ -3716,7 +3716,7 @@
                 "Federico P.": false,
                 "Erica B.": false,
                 "Daniela C.": false,
-                "Daniela G.": false,
+                "Daniela G.": true,
                 "Pietro P.": false,
                 "Maria S.": false,
                 "Gurpal S.": false,
