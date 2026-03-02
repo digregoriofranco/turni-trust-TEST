@@ -51,8 +51,10 @@
             ]
         },
         "Scontrina": {
-            "color": "#cccccc",
-            "tasks": []
+            "color": "#3dff00",
+            "tasks": [
+                "SCONTRINA: supporto@scontrina.it"
+            ]
         }
     },
     "SKILLS": {
