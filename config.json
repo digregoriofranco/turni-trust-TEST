@@ -62,18 +62,17 @@
         "Lorenzo T.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid"
         ],
         "Nicola T.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Paolo G.": [
             "FIRMA: cc.firma",
@@ -89,20 +88,19 @@
         "Federico P.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid"
         ],
         "Erica B.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Daniela C.": [
             "PEC: Caselle Occupate",
@@ -110,11 +108,11 @@
             "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela G.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Pietro P.": [],
         "Maria S.": [],
@@ -136,11 +134,11 @@
         "Lorenza V.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Katia B.": [
             "Scontrina: Presidio Chat Mattina",
