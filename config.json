@@ -62,17 +62,17 @@
         "Lorenzo T.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
+            "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
-            "SPID: cc.spid"
+            "PEC: PECMAN/SDO escalation"
         ],
         "Nicola T.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO escalation"
         ],
         "Paolo G.": [
             "FIRMA: cc.firma",
@@ -88,19 +88,19 @@
         "Federico P.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
+            "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
-            "SPID: cc.spid"
+            "PEC: PECMAN/SDO escalation"
         ],
         "Erica B.": [
             "Scontrina: Presidio Chat Mattina",
             "Scontrina: Presidio Chat Pomeriggio",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela C.": [
             "PEC: Caselle Occupate",
@@ -108,11 +108,11 @@
             "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela G.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Pietro P.": [],
         "Maria S.": [],
@@ -124,9 +124,6 @@
             "FATTURAZIONE: PECMAN"
         ],
         "Francesca F.": [
-            "PEC: Caselle Occupate",
-            "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
             "FATTURAZIONE: PECMAN"
