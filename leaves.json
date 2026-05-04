@@ -5219,12 +5219,12 @@
                 "Andrea V.": false,
                 "Federico P.": false,
                 "Erica B.": false,
-                "Daniela C.": false,
+                "Daniela C.": true,
                 "Daniela G.": false,
                 "Pietro P.": false,
                 "Maria S.": false,
                 "Gurpal S.": false,
-                "Francesca F.": false,
+                "Francesca F.": true,
                 "Lorenza V.": false,
                 "Katia B.": false,
                 "Caterina B.": false
@@ -5337,7 +5337,7 @@
                 "Paolo G.": false,
                 "Andrea V.": false,
                 "Federico P.": false,
-                "Erica B.": false,
+                "Erica B.": true,
                 "Daniela C.": false,
                 "Daniela G.": false,
                 "Pietro P.": false,
@@ -5346,7 +5346,7 @@
                 "Francesca F.": false,
                 "Lorenza V.": false,
                 "Katia B.": false,
-                "Caterina B.": false
+                "Caterina B.": true
             },
             "13 Mer": {
                 "Lorenzo T.": false,
@@ -5452,7 +5452,7 @@
             },
             "19 Mar": {
                 "Lorenzo T.": false,
-                "Nicola T.": false,
+                "Nicola T.": true,
                 "Paolo G.": false,
                 "Andrea V.": false,
                 "Federico P.": false,
@@ -5574,7 +5574,7 @@
                 "Nicola T.": false,
                 "Paolo G.": false,
                 "Andrea V.": false,
-                "Federico P.": false,
+                "Federico P.": true,
                 "Erica B.": false,
                 "Daniela C.": false,
                 "Daniela G.": false,
