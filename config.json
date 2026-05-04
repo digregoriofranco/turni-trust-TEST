@@ -114,36 +114,33 @@
         "Pietro P.": [],
         "Maria S.": [],
         "Gurpal S.": [
+            "Scontrina: SCONTRINA: supporto@scontrina.it",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "Scontrina: SCONTRINA: supporto@scontrina.it"
+            "FATTURAZIONE: PECMAN"
         ],
         "Francesca F.": [
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
             "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Lorenza V.": [
-            "FATTURAZIONE: cc.fatturazione",
-            "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
             "SPID: cc.spid",
             "SPID: PECMAN/SDO (SPID)",
-            "Scontrina: SCONTRINA: supporto@scontrina.it"
+            "Scontrina: SCONTRINA: supporto@scontrina.it",
+            "FATTURAZIONE: cc.fatturazione",
+            "FATTURAZIONE: SDO",
+            "FATTURAZIONE: PECMAN"
         ],
         "Katia B.": [
+            "Scontrina: SCONTRINA: supporto@scontrina.it",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "Scontrina: SCONTRINA: supporto@scontrina.it"
+            "FATTURAZIONE: PECMAN"
         ],
         "Caterina B.": [
+            "Scontrina: SCONTRINA: supporto@scontrina.it",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN",
-            "Scontrina: SCONTRINA: supporto@scontrina.it"
+            "FATTURAZIONE: PECMAN"
         ]
     },
     "PAUSE": {
