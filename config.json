@@ -59,8 +59,6 @@
     },
     "SKILLS": {
         "Lorenzo T.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
             "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
@@ -74,23 +72,23 @@
             "PEC: PECMAN/SDO escalation"
         ],
         "Paolo G.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "FIRMA: cc.firma",
+            "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Andrea V.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Federico P.": [
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)",
             "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "FIRMA: cc.firma",
+            "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Erica B.": [
             "SPID: cc.spid",
