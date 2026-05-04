@@ -64,37 +64,40 @@
             "PEC: PECMAN/SDO escalation"
         ],
         "Nicola T.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO escalation"
         ],
         "Paolo G.": [
+            "FIRMA: cc.firma",
+            "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
-            "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)"
+            "PEC: PECMAN/SDO escalation"
         ],
         "Andrea V.": [
             "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)"
-        ],
-        "Federico P.": [
+            "FIRMA: PECMAN/SDO (Firma)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation",
+            "PEC: PECMAN/SDO escalation"
+        ],
+        "Federico P.": [
             "FIRMA: cc.firma",
             "FIRMA: PECMAN/SDO (Firma)",
-            "SPID: cc.spid"
+            "SPID: cc.spid",
+            "PEC: reparto.pec",
+            "PEC: Caselle attesa attivazione",
+            "PEC: PECMAN/SDO escalation"
         ],
         "Erica B.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela C.": [
             "PEC: Caselle Occupate",
@@ -102,11 +105,11 @@
             "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela G.": [
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO",
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)"
+            "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Pietro P.": [],
         "Maria S.": [],
