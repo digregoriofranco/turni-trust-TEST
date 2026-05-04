@@ -59,17 +59,16 @@
     },
     "SKILLS": {
         "Lorenzo T.": [
-            "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
             "PEC: PECMAN/SDO escalation"
         ],
         "Nicola T.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
-            "PEC: PECMAN/SDO escalation"
+            "PEC: PECMAN/SDO escalation",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Paolo G.": [
             "PEC: reparto.pec",
@@ -83,19 +82,19 @@
             "FIRMA: PECMAN/SDO (Firma)"
         ],
         "Federico P.": [
-            "SPID: cc.spid",
             "PEC: reparto.pec",
             "PEC: Caselle attesa attivazione",
             "PEC: PECMAN/SDO escalation",
             "FIRMA: cc.firma",
-            "FIRMA: PECMAN/SDO (Firma)"
+            "FIRMA: PECMAN/SDO (Firma)",
+            "SPID: cc.spid"
         ],
         "Erica B.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Daniela C.": [
             "PEC: Caselle Occupate",
@@ -103,11 +102,11 @@
             "PEC: PECMAN/SDO POMERIGGIO"
         ],
         "Daniela G.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "PEC: Caselle Occupate",
             "PEC: PECMAN/SDO MATTINA",
-            "PEC: PECMAN/SDO POMERIGGIO"
+            "PEC: PECMAN/SDO POMERIGGIO",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Pietro P.": [],
         "Maria S.": [],
@@ -121,12 +120,12 @@
             "Scontrina: SCONTRINA: supporto@scontrina.it"
         ],
         "Lorenza V.": [
-            "SPID: cc.spid",
-            "SPID: PECMAN/SDO (SPID)",
             "Scontrina: SCONTRINA: supporto@scontrina.it",
             "FATTURAZIONE: cc.fatturazione",
             "FATTURAZIONE: SDO",
-            "FATTURAZIONE: PECMAN"
+            "FATTURAZIONE: PECMAN",
+            "SPID: cc.spid",
+            "SPID: PECMAN/SDO (SPID)"
         ],
         "Katia B.": [
             "Scontrina: SCONTRINA: supporto@scontrina.it",
